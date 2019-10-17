@@ -9,8 +9,7 @@ import javax.persistence.Id;
 public class CustomerEntity {
 
     @Id
-    @GeneratedValue
-    private String customerId;
+    private String _id;
 
     private String userName;
 
@@ -46,11 +45,11 @@ public class CustomerEntity {
     private String userStatus;
 
     public String getCustomerId() {
-        return customerId;
+        return _id;
     }
 
     public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+        this._id = customerId;
     }
 
     public String getUserName() {
@@ -184,7 +183,7 @@ public class CustomerEntity {
     @Override
     public String toString() {
         return "CustomerEntity{" +
-                "customerId='" + customerId + '\'' +
+                "customerId='" + _id + '\'' +
                 ", userName='" + userName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
