@@ -13,7 +13,7 @@ import org.springframework.statemachine.state.State;
 
 @Configuration
 @EnableStateMachine
-public class TransactionStateMachine extends StateMachineConfigurerAdapter<TransactionState,TransactionEvents> {
+public class TransactionStateMachine extends StateMachineConfigurerAdapter<TransactionState, TransactionEvents> {
 
     @Override
     public void configure(StateMachineTransitionConfigurer<TransactionState, TransactionEvents> transitions) throws Exception {
@@ -31,7 +31,11 @@ public class TransactionStateMachine extends StateMachineConfigurerAdapter<Trans
 
     @Override
     public void configure(StateMachineStateConfigurer<TransactionState, TransactionEvents> states) throws Exception {
-        states.withStates().initial(TransactionState.PAID)
+        states.withStates().initial(TransactionState.PAID).stateEntry(TransactionState.PAID,
+                stateContext -> {
+                    stateContext.getExtendedState().getVariables().getOrDefault("transactionId", "default");
+                    //TODO: Log this activity
+                })
                 .state(TransactionState.ATTENDED).state(TransactionState.NOT_ATTENDED).state(TransactionState.SETTLED)
                 .end(TransactionState.REFUNDED).end(TransactionState.CALCULATED);
     }

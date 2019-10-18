@@ -5,7 +5,7 @@ import com.gyangod.model.Customer;
 
 public class CustomerConversion {
 
-    public CustomerEntity getCustomerEntity(Customer customer){
+    public static CustomerEntity getCustomerEntity(Customer customer){
         CustomerEntity entity = new CustomerEntity();
         entity.setCustomerId(customer.getCustomerId());
         entity.setUserName(customer.getUserName());
@@ -18,7 +18,7 @@ public class CustomerConversion {
         return entity;
     }
 
-    public Customer getCustomer(CustomerEntity customer){
+    public static Customer getCustomer(CustomerEntity customer){
         Customer entity = new Customer();
         entity.setCustomerId(customer.getCustomerId());
         entity.setUserName(customer.getUserName());

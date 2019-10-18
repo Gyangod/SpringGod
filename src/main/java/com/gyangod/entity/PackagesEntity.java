@@ -1,6 +1,7 @@
 package com.gyangod.entity;
 
 import com.gyangod.embeddedentity.PackageOccurrences;
+import com.gyangod.enums.PackageState;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
@@ -122,11 +123,11 @@ public class PackagesEntity {
         this.occurrencesList = occurrencesList;
     }
 
-    public String getPackageStatus() {
-        return packageStatus;
+    public PackageState getPackageStatus() {
+        return PackageState.valueOf(packageStatus);
     }
 
-    public void setPackageStatus(String packageStatus) {
-        this.packageStatus = packageStatus;
+    public void setPackageStatus(PackageState packageStatus) {
+        this.packageStatus = packageStatus.name();
     }
 }

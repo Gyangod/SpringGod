@@ -16,14 +16,12 @@ public class PackagesServiceImpl implements PackagesService {
     @Autowired
     private PackagesRepository packagesRepository;
 
-    private static PackagesConversion packagesConversion = new PackagesConversion();
-
     @Override
     public Pack testEndToEnd(Pack packages) throws Exception {
         try {
-            PackagesEntity entity = packagesConversion.getPackagesEntity(packages);
+            PackagesEntity entity = PackagesConversion.getPackagesEntity(packages);
             entity = packagesRepository.save(entity);
-            return packagesConversion.getPackages(entity);
+            return PackagesConversion.getPackages(entity);
         }catch (Exception e){
             throw e;
         }
@@ -39,7 +37,7 @@ public class PackagesServiceImpl implements PackagesService {
                 if(packs == null){
                     packs = new ArrayList<>();
                 }
-                packs.add(packagesConversion.getPackages(entity));
+                packs.add(PackagesConversion.getPackages(entity));
             }
             return packs;
         }catch (Exception e){
