@@ -33,6 +33,10 @@ public class PackagesEntity {
 
     private List<PackageOccurrences> occurrencesList;
 
+    private List<String> subjects;
+
+    private List<String> topics;
+
     private String packageStatus;
 
     public String getPackageId() {
@@ -121,6 +125,22 @@ public class PackagesEntity {
 
     public void setOccurrencesList(List<PackageOccurrences> occurrencesList) {
         this.occurrencesList = occurrencesList;
+    }
+
+    public List<String> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<String> subjects) {
+        this.subjects = subjects;
+    }
+
+    public List<String> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(List<String> topics) {
+        this.topics = topics;
     }
 
     public PackageState getPackageStatus() {

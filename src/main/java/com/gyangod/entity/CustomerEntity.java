@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.List;
 
 @Document(collection = "CUSTOMER")
 public class CustomerEntity {
@@ -41,6 +42,8 @@ public class CustomerEntity {
     private Integer facilitatorCount;
 
     private String bankDetailsId;
+
+    private List<String> addresses;
 
     private String userStatus;
 
@@ -170,6 +173,14 @@ public class CustomerEntity {
 
     public void setBankDetailsId(String bankDetailsId) {
         this.bankDetailsId = bankDetailsId;
+    }
+
+    public List<String> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<String> addresses) {
+        this.addresses = addresses;
     }
 
     public String getUserStatus() {

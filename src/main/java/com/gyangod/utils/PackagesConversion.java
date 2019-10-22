@@ -11,6 +11,8 @@ public class PackagesConversion {
         entity.setPackageId(packages.getPackageId());
         entity.setStandards(packages.getStandards());
         entity.setOccurrencesList(packages.getOccurrencesList());
+        entity.setSubjects(packages.getSubjects());
+        entity.setTopics(packages.getTopics());
         entity.setPackageStatus(PackageState.valueOf(packages.getPackageStatus()));
         return entity;
     }
@@ -21,6 +23,8 @@ public class PackagesConversion {
         entity.setStandards(packages.getStandards());
         entity.setOccurrencesList(packages.getOccurrencesList());
         entity.setPackageStatus(packages.getPackageStatus().name());
+        entity.setSubjects(packages.getSubjects());
+        entity.setTopics(packages.getTopics());
         return entity;
     }
 }
