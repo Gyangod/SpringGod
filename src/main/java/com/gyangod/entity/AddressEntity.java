@@ -1,7 +1,11 @@
 package com.gyangod.entity;
 
 import com.gyangod.embeddedentity.AddressPlace;
-import org.bson.types.ObjectId;
+import com.gyangod.embeddedentity.PackageOccurrences;
+import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
@@ -13,7 +17,8 @@ public class AddressEntity {
     @Id
     private String _id;
 
-    private ObjectId customerId;
+    @Indexed(name = "customer_address")
+    private String customerId;
 
     private String addressLine1;
 
@@ -29,11 +34,12 @@ public class AddressEntity {
 
     private List<AddressPlace> places;
 
-    private Double latitude;
+    @GeoSpatialIndexed(name = "address_location", type = GeoSpatialIndexType.GEO_2DSPHERE)
+    private Point location;
 
-    private Double longitude;
+    private Integer addressUsedCount;
 
-    private Integer addressCount;
+    private List<PackageOccurrences> addressPackageOccurrences;
 
     private String addressStatus;
 
@@ -45,11 +51,11 @@ public class AddressEntity {
         this._id = _id;
     }
 
-    public ObjectId getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(ObjectId customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
@@ -109,28 +115,28 @@ public class AddressEntity {
         this.places = places;
     }
 
-    public Double getLatitude() {
-        return latitude;
+    public Point getLocation() {
+        return location;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
-    public Double getLongitude() {
-        return longitude;
+    public Integer getAddressUsedCount() {
+        return addressUsedCount;
     }
 
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
+    public void setAddressUsedCount(Integer addressUsedCount) {
+        this.addressUsedCount = addressUsedCount;
     }
 
-    public Integer getAddressCount() {
-        return addressCount;
+    public List<PackageOccurrences> getAddressPackageOccurrences() {
+        return addressPackageOccurrences;
     }
 
-    public void setAddressCount(Integer addressCount) {
-        this.addressCount = addressCount;
+    public void setAddressPackageOccurrences(List<PackageOccurrences> addressPackageOccurrences) {
+        this.addressPackageOccurrences = addressPackageOccurrences;
     }
 
     public String getAddressStatus() {

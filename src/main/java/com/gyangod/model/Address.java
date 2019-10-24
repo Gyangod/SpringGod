@@ -1,16 +1,14 @@
 package com.gyangod.model;
 
 import com.gyangod.embeddedentity.AddressPlace;
-import com.gyangod.entity.CustomerEntity;
+import org.springframework.data.geo.Point;
 
-import javax.persistence.ManyToOne;
 import java.util.List;
 
 public class Address {
 
     private String addressId;
 
-    @ManyToOne(targetEntity = CustomerEntity.class)
     private String customerId;
 
     private String addressLine1;
@@ -27,9 +25,7 @@ public class Address {
 
     private List<AddressPlace> places;
 
-    private Double latitude;
-
-    private Double longitude;
+    private Point location;
 
     public String getAddressId() {
         return addressId;
@@ -103,19 +99,11 @@ public class Address {
         this.places = places;
     }
 
-    public Double getLatitude() {
-        return latitude;
+    public Point getLocation() {
+        return location;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
+    public void setLocation(Point location) {
+        this.location = location;
     }
 }

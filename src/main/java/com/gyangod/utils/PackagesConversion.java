@@ -10,10 +10,15 @@ public class PackagesConversion {
         PackagesEntity entity = new PackagesEntity();
         entity.setPackageId(packages.getPackageId());
         entity.setStandards(packages.getStandards());
+        entity.setCostPerUser(packages.getCostPerUser());
+        entity.setVisibility(packages.getVisibility());
+        entity.setAddressLock(packages.getAddressLock());
+        entity.setAddressId(packages.getAddressId());
+        entity.setLocation(packages.getLocation());
         entity.setOccurrencesList(packages.getOccurrencesList());
         entity.setSubjects(packages.getSubjects());
         entity.setTopics(packages.getTopics());
-        entity.setPackageStatus(PackageState.valueOf(packages.getPackageStatus()));
+        if(packages.getPackageStatus()!=null) entity.setPackageStatus(PackageState.valueOf(packages.getPackageStatus()));
         return entity;
     }
 
@@ -21,8 +26,13 @@ public class PackagesConversion {
         Pack entity = new Pack();
         entity.setPackageId(packages.getPackageId());
         entity.setStandards(packages.getStandards());
+        entity.setCostPerUser(packages.getCostPerUser());
+        entity.setVisibility(packages.getVisibility());
+        entity.setAddressLock(packages.getAddressLock());
+        entity.setAddressId(packages.getAddressId());
+        entity.setLocation(packages.getLocation());
         entity.setOccurrencesList(packages.getOccurrencesList());
-        entity.setPackageStatus(packages.getPackageStatus().name());
+        if(packages.getPackageStatus().name()!= null) entity.setPackageStatus(packages.getPackageStatus().name());
         entity.setSubjects(packages.getSubjects());
         entity.setTopics(packages.getTopics());
         return entity;

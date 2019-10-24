@@ -52,19 +52,23 @@ public class AddressServiceImpl implements AddressService {
             CustomerAddress customerAddress = addressConversion.setInitialCustomer(customerEntity);
             if(customerEntity==null) throw new Exception("UserName Not Found");
             for (String address: customerEntity.getAddresses()) {
-                Optional.ofNullable(addressRepository.findById(address)).ifPresent(addressEntity ->
+//                AddressEntity addressEntity = addressRepository.findBy_id(address);
+//                System.out.println(addressEntity);
+//                customerAddress.setAddresses(this.buildAddressListForCustomer(customerAddress.getAddresses(),addressConversion.getAddress(addressEntity)));
+                Optional.ofNullable(addressRepository.findById(address)).ifPresent(addressEntity1 ->
                     customerAddress.setAddresses(
                             this.buildAddressListForCustomer(customerAddress.getAddresses(),
-                                    addressConversion.getAddress(addressEntity.get()))));
+                                    addressConversion.getAddress(addressEntity1.get()))));
             }
             return customerAddress;
         }catch (Exception e){
+            e.printStackTrace();
          throw e;
         }
     }
 
     /**
-     *
+     * Generic Function to save it in a array List of any kind.
      * @param addresses the existing List of addresses or blank List
      * @param newAddress the newly generated address
      * @return the generated new List of address
