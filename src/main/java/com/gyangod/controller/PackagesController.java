@@ -17,10 +17,18 @@ public class PackagesController {
     @Autowired
     private PackagesService packagesService;
 
-    @PostMapping(value = "/{userName}/save")
-    public ResponseEntity savePackageFromUser(@PathVariable(value = "userName") String userName,@RequestBody Pack pack){
+    @PostMapping(value = "/{userName}/save/{role}")
+    public ResponseEntity savePackageFromUser(@PathVariable(value = "userName") String userName,
+                                              @PathVariable(value = "role")String role,
+                                              @RequestBody Pack pack){
         try{
-            return new ResponseEntity(packagesService.savePackage(pack,userName),HttpStatus.OK);
+            PackageState state;
+            try{
+                 state = PackageState.valueOf(role.toUpperCase());
+            }catch (Exception e){
+                return new ResponseEntity("Please save as \"student\" or \"teacher\" only",HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+            return new ResponseEntity(packagesService.savePackage(pack,userName,state),HttpStatus.OK);
         }catch (Exception e){
             return  new ResponseEntity(e,HttpStatus.BAD_REQUEST);
         }
@@ -36,7 +44,7 @@ public class PackagesController {
     }
 
     @PostMapping(value = "/test")
-    public ResponseEntity backendToFronEnd(@RequestBody Pack pack){
+    public ResponseEntity backendToFrontEnd(@RequestBody Pack pack){
         try{
             //todo:validation of model class
             pack.setPackageStatus(PackageState.ACTIVE.name());

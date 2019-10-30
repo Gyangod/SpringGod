@@ -40,7 +40,7 @@ public class PackagesServiceImpl implements PackagesService {
     }
 
     @Override
-    public Pack savePackage(Pack pack,String userName) throws Exception {
+    public Pack savePackage(Pack pack,String userName,PackageState packageState) throws Exception {
         try{
             CustomerEntity customerEntity = customerRepository.findByUserName(userName);
             PackagesEntity packagesEntity = PackagesConversion.getPackagesEntity(pack);
@@ -59,8 +59,9 @@ public class PackagesServiceImpl implements PackagesService {
                 throw  new Exception("Please give at least one occurrence of your package");
             }
             packagesEntity.setTotalWorkingHours(totalSumOfHours);
-            packagesEntity.setPackageStatus(PackageState.ACTIVE);
-            return PackagesConversion.getPackages(packagesRepository.save(packagesEntity));
+            packagesEntity.setPackageStatus(packageState);
+            packagesEntity = packagesRepository.save(packagesEntity);
+            return PackagesConversion.getPackages(packagesEntity);
         }catch (Exception e){
             e.printStackTrace();
             throw e;
