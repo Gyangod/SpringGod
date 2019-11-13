@@ -2,7 +2,11 @@ package com.gyangod.embeddedentity;
 
 import java.util.Date;
 
-public class PackageEntity {
+public class PackageGroup {
+
+    public PackageGroup(Integer occurrences) {
+        this.occurrences = occurrences;
+    }
 
     private String createdByUserId;
 
@@ -12,13 +16,13 @@ public class PackageEntity {
 
     private Integer totalOccurrences;
 
-    private Float totalWorkingHours;
+    private Double totalWorkingHours;
     /**
-     * total Working Hours registered in the
+     * total Working Hours registered in the group
      */
-    private Float payingWorkingHours;
+    private Double payingWorkingHours;
 
-    private Float divisor;
+    private Double divisor;
 
     /**
      * The first time when package starts
@@ -61,27 +65,27 @@ public class PackageEntity {
         this.totalOccurrences = totalOccurrences;
     }
 
-    public Float getTotalWorkingHours() {
+    public Double getTotalWorkingHours() {
         return totalWorkingHours;
     }
 
-    public void setTotalWorkingHours(Float totalWorkingHours) {
+    public void setTotalWorkingHours(Double totalWorkingHours) {
         this.totalWorkingHours = totalWorkingHours;
     }
 
-    public Float getPayingWorkingHours() {
+    public Double getPayingWorkingHours() {
         return payingWorkingHours;
     }
 
-    public void setPayingWorkingHours(Float payingWorkingHours) {
+    public void setPayingWorkingHours(Double payingWorkingHours) {
         this.payingWorkingHours = payingWorkingHours;
     }
 
-    public Float getDivisor() {
+    public Double getDivisor() {
         return divisor;
     }
 
-    public void setDivisor(Float divisor) {
+    public void setDivisor(Double divisor) {
         this.divisor = divisor;
     }
 

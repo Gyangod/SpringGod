@@ -41,7 +41,7 @@ public class AddressServiceImpl implements AddressService {
             customerRepository.save(customerEntity);
             return addressConversion.getAddress(addressEntity);
         }catch(Exception e){
-            throw e;
+            throw new Exception("Address Cannot be Saved!");
         }
     }
 

@@ -1,7 +1,8 @@
 package com.gyangod.entity;
 
-import com.gyangod.embeddedentity.PackageEntity;
+import com.gyangod.embeddedentity.PackageGroup;
 import com.gyangod.embeddedentity.UserEntity;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ public class GroupsEntity {
     /**
      * Name of the group Can be changed by admin only but group Title by anyone.
      */
+    @Indexed(name = "groupNameIndex")
     private String groupName;
 
     private String groupTitle;
@@ -26,24 +28,24 @@ public class GroupsEntity {
     /**
      * this is totalAmount/Divisor
      */
-    private Float paymentAmount;
+    private Double paymentAmount;
 
     private String packageId;
     /**
      * A customised Details of the Package by the Group Admin.
      */
-    private PackageEntity packageEntity;
+    private PackageGroup packageGroup;
     /**
-     * By this date payment must be completed. Usually 4 hours before.
+     * By this date payment must be completed. Just 2 hours before.
      */
     private Date paymentCompleteDate;
     /**
-     * At this time user will get notification.
+     * At this time user will get notification. half an hour ago.
      */
     private Date notificationTime;
     /**
      * At this date old transaction detail will be removed.
-     * Usually this is the start time of the second last package occurrence
+     * Usually this is the end time of the first package occurrence
      */
     private Date statusRefreshDate;
     /**
@@ -53,7 +55,7 @@ public class GroupsEntity {
     /**
      * UserId of who last changed the group settings.
      */
-    private String groupLastUpdatedByUserId;
+    private String groupLastUpdatedByUserName;
 
     private String groupStatus;
 
@@ -89,11 +91,11 @@ public class GroupsEntity {
         this.userEntities = userEntities;
     }
 
-    public Float getPaymentAmount() {
+    public Double getPaymentAmount() {
         return paymentAmount;
     }
 
-    public void setPaymentAmount(Float paymentAmount) {
+    public void setPaymentAmount(Double paymentAmount) {
         this.paymentAmount = paymentAmount;
     }
 
@@ -105,12 +107,12 @@ public class GroupsEntity {
         this.packageId = packageId;
     }
 
-    public PackageEntity getPackageEntity() {
-        return packageEntity;
+    public PackageGroup getPackageGroup() {
+        return packageGroup;
     }
 
-    public void setPackageEntity(PackageEntity packageEntity) {
-        this.packageEntity = packageEntity;
+    public void setPackageGroup(PackageGroup packageGroup) {
+        this.packageGroup = packageGroup;
     }
 
     public Date getPaymentCompleteDate() {
@@ -145,12 +147,12 @@ public class GroupsEntity {
         this.packageExpiryDate = packageExpiryDate;
     }
 
-    public String getGroupLastUpdatedByUserId() {
-        return groupLastUpdatedByUserId;
+    public String getGroupLastUpdatedByUserName() {
+        return groupLastUpdatedByUserName;
     }
 
-    public void setGroupLastUpdatedByUserId(String groupLastUpdatedByUserId) {
-        this.groupLastUpdatedByUserId = groupLastUpdatedByUserId;
+    public void setGroupLastUpdatedByUserName(String groupLastUpdatedByUserName) {
+        this.groupLastUpdatedByUserName = groupLastUpdatedByUserName;
     }
 
     public String getGroupStatus() {

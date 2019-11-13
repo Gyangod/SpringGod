@@ -2,6 +2,7 @@ package com.gyangod.model;
 
 import com.gyangod.embeddedentity.UserEntity;
 
+import java.util.Date;
 import java.util.List;
 
 public class Group {
@@ -14,11 +15,15 @@ public class Group {
 
     private List<UserEntity> userEntities;
 
-    private Float paymentAmount;
-
     private String packageId;
 
-    private Integer occurrences;
+    private Integer occurrencesSelected;
+
+    private Date paymentCompleteDate;
+
+    private Date nextEventDate;
+
+    private String groupLastUpdatedBy;
 
     public String getGroupId() {
         return groupId;
@@ -52,14 +57,6 @@ public class Group {
         this.userEntities = userEntities;
     }
 
-    public Float getPaymentAmount() {
-        return paymentAmount;
-    }
-
-    public void setPaymentAmount(Float paymentAmount) {
-        this.paymentAmount = paymentAmount;
-    }
-
     public String getPackageId() {
         return packageId;
     }
@@ -68,11 +65,35 @@ public class Group {
         this.packageId = packageId;
     }
 
-    public Integer getOccurrences() {
-        return occurrences;
+    public Integer getOccurrencesSelected() {
+        return occurrencesSelected;
     }
 
-    public void setOccurrences(Integer occurrences) {
-        this.occurrences = occurrences;
+    public void setOccurrencesSelected(Integer occurrencesSelected) {
+        this.occurrencesSelected = occurrencesSelected;
+    }
+
+    public Date getPaymentCompleteDate() {
+        return paymentCompleteDate;
+    }
+
+    public void setPaymentCompleteDate(Date paymentCompleteDate) {
+        this.paymentCompleteDate = paymentCompleteDate;
+    }
+
+    public Date getNextEventDate() {
+        return nextEventDate;
+    }
+
+    public void setNextEventDate(Date nextEventDate) {
+        this.nextEventDate = nextEventDate;
+    }
+
+    public String getGroupLastUpdatedBy() {
+        return groupLastUpdatedBy;
+    }
+
+    public void setGroupLastUpdatedBy(String groupLastUpdatedBy) {
+        this.groupLastUpdatedBy = groupLastUpdatedBy;
     }
 }

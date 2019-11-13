@@ -1,6 +1,6 @@
 package com.gyangod.embeddedentity;
 
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.geo.Point;
 
 public class UserEntity {
 
@@ -22,7 +22,7 @@ public class UserEntity {
 
     private String pinCode;
 
-    private GeoJsonPoint geoJsonPoint;
+    private Point location;
 
     private Integer votesReceived;
 
@@ -110,12 +110,12 @@ public class UserEntity {
         this.pinCode = pinCode;
     }
 
-    public GeoJsonPoint getGeoJsonPoint() {
-        return geoJsonPoint;
+    public Point getLocation() {
+        return location;
     }
 
-    public void setGeoJsonPoint(GeoJsonPoint geoJsonPoint) {
-        this.geoJsonPoint = geoJsonPoint;
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
     public Integer getVotesReceived() {
