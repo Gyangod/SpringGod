@@ -1,9 +1,11 @@
 package com.gyangod.entity;
 
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Document(collection = "CUSTOMER")
 public class CustomerEntity {
@@ -11,16 +13,21 @@ public class CustomerEntity {
     @Id
     private String _id;
 
+    @Indexed(name = "customer_username",unique = true,sparse = true)
+    @NotNull
     private String userName;
 
+    @NotNull
     private String firstName;
 
     private String lastName;
 
+    @NotNull
     private String emailAddress;
 
     private String countryCode;
 
+    @NotNull
     private String contactNumber;
 
     //todo: masking of password before saving to DB
@@ -41,6 +48,8 @@ public class CustomerEntity {
     private Integer facilitatorCount;
 
     private String bankDetailsId;
+
+    private List<String> addresses;
 
     private String userStatus;
 
@@ -170,6 +179,14 @@ public class CustomerEntity {
 
     public void setBankDetailsId(String bankDetailsId) {
         this.bankDetailsId = bankDetailsId;
+    }
+
+    public List<String> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<String> addresses) {
+        this.addresses = addresses;
     }
 
     public String getUserStatus() {

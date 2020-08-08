@@ -8,6 +8,8 @@ public class PackageOccurrences {
 
     private Date toTime;
 
+    private Double workingHours;
+
     private Integer sequence;
 
     public Date getFromTime() {
@@ -26,20 +28,19 @@ public class PackageOccurrences {
         this.toTime = toTime;
     }
 
+    public Double getWorkingHours() {
+        return workingHours;
+    }
+
+    public void setWorkingHours(Double workingHours) {
+        this.workingHours = workingHours;
+    }
+
     public Integer getSequence() {
         return sequence;
     }
 
     public void setSequence(Integer sequence) {
         this.sequence = sequence;
-    }
-
-    @Override
-    public String toString() {
-        return "PackageOccurrences{" +
-                "fromTime=" + fromTime +
-                ", toTime=" + toTime +
-                ", sequence=" + sequence +
-                '}';
     }
 }

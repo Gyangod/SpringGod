@@ -1,7 +1,8 @@
 package com.gyangod.enums;
 
 public enum PackageEvents {
-    activate,
+    student,
+    teacher,
     deactivate,
     change,
     destroy

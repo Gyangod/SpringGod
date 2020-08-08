@@ -38,14 +38,14 @@ public class PackageStateMachine extends StateMachineConfigurerAdapter<PackageSt
     @Override
     public void configure(StateMachineTransitionConfigurer<PackageState, PackageEvents> transitions) throws Exception {
         transitions
-                .withExternal().source(PackageState.ACTIVE).target(PackageState.STUDENT).event(PackageEvents.activate).and()
-                .withExternal().source(PackageState.ACTIVE).target(PackageState.TEACHER).event(PackageEvents.activate).and()
-                .withExternal().source(PackageState.STUDENT).target(PackageState.TEACHER).event(PackageEvents.change).and()
-                .withExternal().source(PackageState.TEACHER).target(PackageState.STUDENT).event(PackageEvents.change).and()
+                .withExternal().source(PackageState.ACTIVE).target(PackageState.STUDENT).event(PackageEvents.student).and()
+                .withExternal().source(PackageState.ACTIVE).target(PackageState.TEACHER).event(PackageEvents.teacher).and()
+//                .withExternal().source(PackageState.STUDENT).target(PackageState.TEACHER).event(PackageEvents.change).and()
+//                .withExternal().source(PackageState.TEACHER).target(PackageState.STUDENT).event(PackageEvents.change).and()
                 .withExternal().source(PackageState.STUDENT).target(PackageState.INACTIVE).event(PackageEvents.deactivate).and()
                 .withExternal().source(PackageState.TEACHER).target(PackageState.INACTIVE).event(PackageEvents.deactivate).and()
-                .withExternal().source(PackageState.INACTIVE).target(PackageState.STUDENT).event(PackageEvents.activate).and()
-                .withExternal().source(PackageState.INACTIVE).target(PackageState.TEACHER).event(PackageEvents.activate).and()
+                .withExternal().source(PackageState.INACTIVE).target(PackageState.STUDENT).event(PackageEvents.student).and()
+                .withExternal().source(PackageState.INACTIVE).target(PackageState.TEACHER).event(PackageEvents.teacher).and()
                 .withExternal().source(PackageState.STUDENT).target(PackageState.DEPRECIATE).event(PackageEvents.destroy).and()
                 .withExternal().source(PackageState.TEACHER).target(PackageState.DEPRECIATE).event(PackageEvents.destroy).and()
                 .withExternal().source(PackageState.INACTIVE).target(PackageState.DEPRECIATE).event(PackageEvents.destroy);
