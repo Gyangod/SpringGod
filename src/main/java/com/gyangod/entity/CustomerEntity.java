@@ -4,17 +4,30 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
-//import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Document(collection = "CUSTOMER")
 public class CustomerEntity {
 
+    public CustomerEntity() {
+
+    }
+
+    public CustomerEntity(String userName, String firstName, String lastName, String emailAddress, String contactNumber, String password) {
+        this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailAddress = emailAddress;
+        this.contactNumber = contactNumber;
+        this.password = password;
+    }
+
     @Id
     private String _id;
 
     @Indexed(name = "customer_username",unique = true,sparse = true)
-//    @NotNull
+    @NotNull
     private String userName;
 
 //    @NotNull
@@ -50,6 +63,8 @@ public class CustomerEntity {
     private String bankDetailsId;
 
     private List<String> addresses;
+
+    //todo: list of authorities
 
     private String userStatus;
 
