@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Document(collection = "CUSTOMER")
@@ -14,20 +14,20 @@ public class CustomerEntity {
     private String _id;
 
     @Indexed(name = "customer_username",unique = true,sparse = true)
-    @NotNull
+//    @NotNull
     private String userName;
 
-    @NotNull
+//    @NotNull
     private String firstName;
 
     private String lastName;
 
-    @NotNull
+//    @NotNull
     private String emailAddress;
 
     private String countryCode;
 
-    @NotNull
+//    @NotNull
     private String contactNumber;
 
     //todo: masking of password before saving to DB
