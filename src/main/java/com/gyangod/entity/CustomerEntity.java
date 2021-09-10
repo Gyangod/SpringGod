@@ -1,5 +1,6 @@
 package com.gyangod.entity;
 
+import com.gyangod.enums.UserStatusState;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,13 +15,14 @@ public class CustomerEntity {
 
     }
 
-    public CustomerEntity(String userName, String firstName, String lastName, String emailAddress, String contactNumber, String password) {
+    public CustomerEntity(String userName, String firstName, String lastName, String emailAddress, String contactNumber, String password, String userStatus) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
         this.contactNumber = contactNumber;
         this.password = password;
+        this.userStatus = userStatus;
     }
 
     @Id
@@ -45,6 +47,10 @@ public class CustomerEntity {
 
     //todo: masking of password before saving to DB
     private String password;
+
+    private String[] roles;
+
+    private String[] authorities;
 
     private Boolean isStudent;
 
@@ -204,12 +210,28 @@ public class CustomerEntity {
         this.addresses = addresses;
     }
 
-    public String getUserStatus() {
-        return userStatus;
+    public UserStatusState getUserStatus() {
+        return UserStatusState.valueOf(userStatus);
     }
 
-    public void setUserStatus(String userStatus) {
-        this.userStatus = userStatus;
+    public void setUserStatus(UserStatusState userStatus) {
+        this.userStatus = userStatus.name();
+    }
+
+    public String[] getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = roles;
+    }
+
+    public String[] getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(String[] authorities) {
+        this.authorities = authorities;
     }
 
     @Override

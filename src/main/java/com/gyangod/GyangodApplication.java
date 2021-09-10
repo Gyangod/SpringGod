@@ -1,6 +1,7 @@
 package com.gyangod;
 
 import com.gyangod.entity.CustomerEntity;
+import com.gyangod.enums.UserStatusState;
 import com.gyangod.repository.CustomerRepository;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
@@ -13,7 +14,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class GyangodApplication implements CommandLineRunner {
@@ -53,7 +53,6 @@ public class GyangodApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		customerRepository.deleteAll();
-//		String password = BCryptPasswordEncoder.encode("hello");
-		customerRepository.save(new CustomerEntity("andy","Anindya",null,"abc@xyz.com","1234567890", "hello"));
+		customerRepository.save(new CustomerEntity("andy","Anindya",null,"abc@xyz.com","1234567890", "hello", UserStatusState.ACTIVE.name()));
 	}
 }
