@@ -15,8 +15,10 @@ import org.springframework.statemachine.transition.Transition;
 
 import java.util.Optional;
 
+import static com.gyangod.constants.StateMachineConstant.CUSTOMER_STATE_MACHINE_HEADER;
+
 public class CustomerStateMachineBuilder {
-    static final String STATE_MACHINE_HEADER = "customerId";
+
 
     /**
      *
@@ -32,7 +34,7 @@ public class CustomerStateMachineBuilder {
 
                 @Override
                 public void preStateChange(State state, Message message, Transition transition, StateMachine stateMachine) {
-                    Optional.ofNullable(message).ifPresent(msg-> Optional.ofNullable(msg.getHeaders().getOrDefault(STATE_MACHINE_HEADER,"default"))
+                    Optional.ofNullable(message).ifPresent(msg-> Optional.ofNullable(msg.getHeaders().getOrDefault(CUSTOMER_STATE_MACHINE_HEADER,"default"))
                             .ifPresent(packageId -> {
                                 customerEntity.setUserStatus((UserStatusState) state.getId());
                                 customerRepository.save(customerEntity);
@@ -55,7 +57,7 @@ public class CustomerStateMachineBuilder {
      */
     public static void sendMessageToStateMachine(CustomerEntity customerEntity, CustomerRepository customerRepository,UserStatusEvents  events,
                                                  StateMachineFactory<UserStatusState, UserStatusEvents> userStatusEventsStateMachineFactory){
-        Message<UserStatusEvents> packageEventsMessage = MessageBuilder.withPayload(events).setHeader(STATE_MACHINE_HEADER,customerEntity.getUserStatus()).build();
+        Message<UserStatusEvents> packageEventsMessage = MessageBuilder.withPayload(events).setHeader(CUSTOMER_STATE_MACHINE_HEADER,customerEntity.getUserStatus()).build();
         buildUserStateMachine(customerEntity,customerRepository,userStatusEventsStateMachineFactory).sendEvent(packageEventsMessage);
     }
 

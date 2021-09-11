@@ -10,6 +10,8 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
+import static com.gyangod.constants.StateMachineConstant.CUSTOMER_STATE_MACHINE_HEADER;
+
 @Configuration
 public class UserStateMachine extends StateMachineConfigurerAdapter<UserStatusState, UserStatusEvents> {
 
@@ -27,7 +29,7 @@ public class UserStateMachine extends StateMachineConfigurerAdapter<UserStatusSt
     @Override
     public void configure(StateMachineStateConfigurer<UserStatusState, UserStatusEvents> states) throws Exception {
         states.withStates().initial(UserStatusState.ACTIVE).stateEntry(UserStatusState.ACTIVE, stateContext -> {
-                    stateContext.getExtendedState().getVariables().getOrDefault("customerId", "default");
+                    stateContext.getExtendedState().getVariables().getOrDefault(CUSTOMER_STATE_MACHINE_HEADER, "default");
                     //TODO: Log this activity
                 }).state(UserStatusState.INACTIVE).state(UserStatusState.LOCKED)
                 .end(UserStatusState.EXPIRED);

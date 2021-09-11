@@ -11,13 +11,15 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
+import static com.gyangod.constants.StateMachineConstant.PACKAGE_STATE_MACHINE_HEADER;
+
 @Configuration
 @EnableStateMachineFactory
 public class PackageStateMachine extends StateMachineConfigurerAdapter<PackageState, PackageEvents> {
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<PackageState, PackageEvents> config) throws Exception {
-        config.withConfiguration().autoStartup(false).listener(new StateMachineListenerAdapter<PackageState, PackageEvents>() {
+        config.withConfiguration().autoStartup(false).listener(new StateMachineListenerAdapter<>() {
             @Override
             public void stateChanged(State<PackageState, PackageEvents> from, State<PackageState, PackageEvents> to) {
                 //TODO: Log it while the state is changed.
@@ -29,7 +31,7 @@ public class PackageStateMachine extends StateMachineConfigurerAdapter<PackageSt
     @Override
     public void configure(StateMachineStateConfigurer<PackageState, PackageEvents> states) throws Exception {
         states.withStates().initial(PackageState.ACTIVE).stateEntry(PackageState.ACTIVE, stateContext -> {
-            stateContext.getExtendedState().getVariables().getOrDefault("packageId", "default");
+            stateContext.getExtendedState().getVariables().getOrDefault(PACKAGE_STATE_MACHINE_HEADER, "default");
             //TODO: Log this activity
         }).state(PackageState.INACTIVE).state(PackageState.STUDENT).state(PackageState.TEACHER)
                 .end(PackageState.DEPRECIATE);

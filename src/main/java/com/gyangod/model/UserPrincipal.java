@@ -3,9 +3,13 @@ package com.gyangod.model;
 import com.gyangod.entity.CustomerEntity;
 import com.gyangod.enums.UserStatusState;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
 
 public class UserPrincipal implements UserDetails {
     private CustomerEntity customer;
@@ -16,7 +20,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return stream(this.customer.getAuthorities()).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override

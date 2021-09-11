@@ -15,10 +15,9 @@ import org.springframework.statemachine.transition.Transition;
 
 import java.util.Optional;
 
+import static com.gyangod.constants.StateMachineConstant.PACKAGE_STATE_MACHINE_HEADER;
+
 public class PackageStateMachineBuilder {
-
-    static final String STATE_MACHINE_HEADER = "packageId";
-
     /**
      *
      * #To write in the database if there is any state changed in any Package Entity
@@ -29,11 +28,11 @@ public class PackageStateMachineBuilder {
         StateMachine<PackageState,PackageEvents> sm = packageEventsStateMachineFactory.getStateMachine(packagesEntity.getPackageId());
         sm.stop();
         sm.getStateMachineAccessor().doWithAllRegions(packageStatePackageEventsStateMachineAccess -> {
-            packageStatePackageEventsStateMachineAccess.addStateMachineInterceptor(new StateMachineInterceptorAdapter<PackageState,PackageEvents>() {
+            packageStatePackageEventsStateMachineAccess.addStateMachineInterceptor(new StateMachineInterceptorAdapter<>() {
 
                 @Override
                 public void preStateChange(State state, Message message, Transition transition, StateMachine stateMachine) {
-                    Optional.ofNullable(message).ifPresent(msg-> Optional.ofNullable(msg.getHeaders().getOrDefault(STATE_MACHINE_HEADER,"default"))
+                    Optional.ofNullable(message).ifPresent(msg-> Optional.ofNullable(msg.getHeaders().getOrDefault(PACKAGE_STATE_MACHINE_HEADER,"default"))
                             .ifPresent(packageId -> {
                                 packagesEntity.setPackageStatus((PackageState) state.getId());
                                 packagesRepository.save(packagesEntity);
@@ -57,7 +56,7 @@ public class PackageStateMachineBuilder {
      */
     public static void sendMessageToStateMachine(PackagesEntity packagesEntity, PackagesRepository packagesRepository,PackageEvents  events,
                                           StateMachineFactory<PackageState,PackageEvents> packageEventsStateMachineFactory){
-        Message<PackageEvents> packageEventsMessage = MessageBuilder.withPayload(events).setHeader(STATE_MACHINE_HEADER,packagesEntity.getPackageId()).build();
+        Message<PackageEvents> packageEventsMessage = MessageBuilder.withPayload(events).setHeader(PACKAGE_STATE_MACHINE_HEADER,packagesEntity.getPackageId()).build();
         buildUserStateMachine(packagesEntity,packagesRepository,packageEventsStateMachineFactory).sendEvent(packageEventsMessage);
     }
 
