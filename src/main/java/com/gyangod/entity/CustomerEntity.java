@@ -5,7 +5,10 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 @Document(collection = "CUSTOMER")
@@ -29,15 +32,18 @@ public class CustomerEntity {
     private String _id;
 
     @Indexed(name = "customer_username",unique = true,sparse = true)
-    @NotNull
+    @NotNull(message = "User Name cannot be null")
     private String userName;
 
-//    @NotNull
+    @NotNull(message = "First name cannot be null")
+    @NotBlank(message = "First name cannot be blank")
     private String firstName;
 
     private String lastName;
 
-//    @NotNull
+    @Indexed(unique = true)
+    @NotNull(message = "Email Id cannot be null")
+    @Email(message = "The format of the email is not correct")
     private String emailAddress;
 
     private String countryCode;
@@ -52,25 +58,11 @@ public class CustomerEntity {
 
     private String[] authorities;
 
-    private Boolean isStudent;
+    private Date lastLoginDate;
 
-    private Integer studentCount;
-
-    private Boolean isTeacher;
-
-    private Integer teacherCount;
-
-    private Float teacherRatingAvg;
-
-    private Boolean isFacilitator;
-
-    private Integer facilitatorCount;
-
-    private String bankDetailsId;
+    private Date lastLoginDateDisplay;
 
     private List<String> addresses;
-
-    //todo: list of authorities
 
     private String userStatus;
 
@@ -138,68 +130,36 @@ public class CustomerEntity {
         this.password = password;
     }
 
-    public Boolean getStudent() {
-        return isStudent;
+    public String[] getRoles() {
+        return roles;
     }
 
-    public void setStudent(Boolean student) {
-        isStudent = student;
+    public void setRoles(String[] roles) {
+        this.roles = roles;
     }
 
-    public Integer getStudentCount() {
-        return studentCount;
+    public String[] getAuthorities() {
+        return authorities;
     }
 
-    public void setStudentCount(Integer studentCount) {
-        this.studentCount = studentCount;
+    public void setAuthorities(String[] authorities) {
+        this.authorities = authorities;
     }
 
-    public Boolean getTeacher() {
-        return isTeacher;
+    public Date getLastLoginDate() {
+        return lastLoginDate;
     }
 
-    public void setTeacher(Boolean teacher) {
-        isTeacher = teacher;
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
     }
 
-    public Integer getTeacherCount() {
-        return teacherCount;
+    public Date getLastLoginDateDisplay() {
+        return lastLoginDateDisplay;
     }
 
-    public void setTeacherCount(Integer teacherCount) {
-        this.teacherCount = teacherCount;
-    }
-
-    public Float getTeacherRatingAvg() {
-        return teacherRatingAvg;
-    }
-
-    public void setTeacherRatingAvg(Float teacherRatingAvg) {
-        this.teacherRatingAvg = teacherRatingAvg;
-    }
-
-    public Boolean getFacilitator() {
-        return isFacilitator;
-    }
-
-    public void setFacilitator(Boolean facilitator) {
-        isFacilitator = facilitator;
-    }
-
-    public Integer getFacilitatorCount() {
-        return facilitatorCount;
-    }
-
-    public void setFacilitatorCount(Integer facilitatorCount) {
-        this.facilitatorCount = facilitatorCount;
-    }
-
-    public String getBankDetailsId() {
-        return bankDetailsId;
-    }
-
-    public void setBankDetailsId(String bankDetailsId) {
-        this.bankDetailsId = bankDetailsId;
+    public void setLastLoginDateDisplay(Date lastLoginDateDisplay) {
+        this.lastLoginDateDisplay = lastLoginDateDisplay;
     }
 
     public List<String> getAddresses() {
@@ -216,22 +176,6 @@ public class CustomerEntity {
 
     public void setUserStatus(UserStatusState userStatus) {
         this.userStatus = userStatus.name();
-    }
-
-    public String[] getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String[] roles) {
-        this.roles = roles;
-    }
-
-    public String[] getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(String[] authorities) {
-        this.authorities = authorities;
     }
 
     @Override

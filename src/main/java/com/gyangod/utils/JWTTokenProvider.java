@@ -52,7 +52,7 @@ public class JWTTokenProvider {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    Algorithm algorithm = Algorithm.HMAC512(jwtSecret);
+//    Algorithm algorithm = Algorithm.HMAC512(jwtSecret);
 
     public String generateJwtToken(UserPrincipal principal){
         String[] claims = getClaimsForUser(principal);
@@ -60,7 +60,7 @@ public class JWTTokenProvider {
                 .withAudience(GYANGOD_ADMINISTRATION)
                 .withSubject(principal.getUsername()).withArrayClaim(AUTHORITIES,claims)
                 .withExpiresAt(new Date(System.currentTimeMillis()+EXPIRATION_TIME))
-                .sign(algorithm);
+                .sign(Algorithm.HMAC512(jwtSecret));
     }
 
     private String[] getClaimsForUser(UserPrincipal principal) {
@@ -84,7 +84,7 @@ public class JWTTokenProvider {
     private DecodedJWT getJwtVerifier(String token){
         DecodedJWT jwt;
         try{
-            JWTVerifier verifier = JWT.require(algorithm).withIssuer(GYANGOD_PVT_LTD).build();
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC512(jwtSecret)).withIssuer(GYANGOD_PVT_LTD).build();
             jwt  = verifier.verify(token);
         }catch(JWTVerificationException e){
             throw new JWTVerificationException(TOKEN_CANNOT_BE_VERIFIED);

@@ -17,6 +17,10 @@ public class Customer {
 
     private String contactNumber;
 
+    private String[] roles;
+
+    private String[] authorities;
+
     public String getCustomerId() {
         return customerId;
     }
@@ -71,5 +75,21 @@ public class Customer {
 
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    public String[] getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = roles;
+    }
+
+    public String[] getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(String[] authorities) {
+        this.authorities = authorities;
     }
 }
