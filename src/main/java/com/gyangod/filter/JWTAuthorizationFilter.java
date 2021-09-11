@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -20,6 +21,7 @@ import java.util.List;
 import static com.gyangod.constants.SecurityConstant.OPTIONS_HTTP_METHOD;
 import static com.gyangod.constants.SecurityConstant.TOKEN_PREFIX;
 
+@Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     @Autowired

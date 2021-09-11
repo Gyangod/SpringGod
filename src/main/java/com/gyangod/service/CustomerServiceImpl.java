@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class CustomerServiceImpl implements CustomerService, UserDetailsService {
+public class CustomerServiceImpl implements CustomerService {
 
     private static final Logger LOGGER = LogManager.getLogger(CustomerServiceImpl.class);
 
