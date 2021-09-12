@@ -1,4 +1,4 @@
-package com.gyangod.enums;
+package com.gyangod.enums.statemachine;
 
 public enum UserStatusState {
 

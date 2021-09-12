@@ -1,8 +1,8 @@
 package com.gyangod.service;
 
 import com.gyangod.entity.PackagesEntity;
-import com.gyangod.enums.PackageEvents;
-import com.gyangod.enums.PackageState;
+import com.gyangod.enums.statemachine.PackageEvents;
+import com.gyangod.enums.statemachine.PackageState;
 import com.gyangod.repository.PackagesRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;

@@ -1,6 +1,6 @@
 package com.gyangod.controller;
 
-import com.gyangod.enums.PackageState;
+import com.gyangod.enums.statemachine.PackageState;
 import com.gyangod.model.Pack;
 import com.gyangod.model.PackageSearch;
 import com.gyangod.service.PackagesService;

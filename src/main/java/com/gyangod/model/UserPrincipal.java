@@ -1,7 +1,7 @@
 package com.gyangod.model;
 
 import com.gyangod.entity.CustomerEntity;
-import com.gyangod.enums.UserStatusState;
+import com.gyangod.enums.statemachine.UserStatusState;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,8 +1,8 @@
 package com.gyangod.service;
 
 import com.gyangod.entity.CustomerEntity;
-import com.gyangod.enums.UserStatusEvents;
-import com.gyangod.enums.UserStatusState;
+import com.gyangod.enums.statemachine.UserStatusEvents;
+import com.gyangod.enums.statemachine.UserStatusState;
 import com.gyangod.repository.CustomerRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;

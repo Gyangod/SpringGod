@@ -1,7 +1,7 @@
 package com.gyangod.config;
 
-import com.gyangod.enums.PackageEvents;
-import com.gyangod.enums.PackageState;
+import com.gyangod.enums.statemachine.PackageEvents;
+import com.gyangod.enums.statemachine.PackageState;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;

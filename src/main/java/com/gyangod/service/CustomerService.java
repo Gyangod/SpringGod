@@ -1,14 +1,15 @@
 package com.gyangod.service;
 
+import com.gyangod.exception.domain.EmailNotFoundException;
+import com.gyangod.exception.domain.UserNotFoundException;
 import com.gyangod.model.Customer;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface CustomerService extends UserDetailsService {
 
-    Customer findByUserName(String userName) throws UsernameNotFoundException;
+    Customer findByUserName(String userName) throws UserNotFoundException;
 
-    Customer saveUser(Customer customer) throws Exception;
-    @Deprecated
-    Customer endToEndTest(Customer customer) throws Exception;
+    Customer findByEmailAddress(String emailAddress) throws EmailNotFoundException;
+
+    Customer registerUser(Customer customer) throws Exception;
 }

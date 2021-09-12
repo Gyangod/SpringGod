@@ -1,7 +1,7 @@
 package com.gyangod.config;
 
-import com.gyangod.enums.UserStatusEvents;
-import com.gyangod.enums.UserStatusState;
+import com.gyangod.enums.statemachine.UserStatusEvents;
+import com.gyangod.enums.statemachine.UserStatusState;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;

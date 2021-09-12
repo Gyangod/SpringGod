@@ -15,7 +15,8 @@ public class CustomerConversion {
         entity.setEmailAddress(customer.getEmailAddress());
         entity.setCountryCode(customer.getCountryCode());
         entity.setContactNumber(customer.getContactNumber());
-        entity.setRoles(customer.getRoles());
+        entity.setPassword(customer.getPassword());
+        entity.setRole(customer.getRole());
         entity.setAuthorities(customer.getAuthorities());
         return entity;
     }
@@ -30,7 +31,7 @@ public class CustomerConversion {
         entity.setEmailAddress(customer.getEmailAddress());
         entity.setCountryCode(customer.getCountryCode());
         entity.setContactNumber(customer.getContactNumber());
-        entity.setRoles(customer.getRoles());
+        entity.setRole(customer.getRole());
         entity.setAuthorities(customer.getAuthorities());
         return entity;
     }

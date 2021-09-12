@@ -6,7 +6,7 @@ import com.gyangod.embeddedentity.UserEntity;
 import com.gyangod.entity.CustomerEntity;
 import com.gyangod.entity.GroupsEntity;
 import com.gyangod.entity.PackagesEntity;
-import com.gyangod.enums.PackageState;
+import com.gyangod.enums.statemachine.PackageState;
 import com.gyangod.enums.UserRoles;
 import com.gyangod.model.Group;
 

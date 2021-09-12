@@ -1,7 +1,7 @@
 package com.gyangod.entity;
 
 import com.gyangod.embeddedentity.PackageOccurrences;
-import com.gyangod.enums.PackageState;
+import com.gyangod.enums.statemachine.PackageState;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;

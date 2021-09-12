@@ -1,7 +1,7 @@
 package com.gyangod.utils;
 
 import com.gyangod.entity.PackagesEntity;
-import com.gyangod.enums.PackageState;
+import com.gyangod.enums.statemachine.PackageState;
 import com.gyangod.model.Pack;
 
 public class PackagesConversion {

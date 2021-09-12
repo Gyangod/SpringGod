@@ -1,6 +1,6 @@
 package com.gyangod.entity;
 
-import com.gyangod.enums.UserStatusState;
+import com.gyangod.enums.statemachine.UserStatusState;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,17 +15,7 @@ import java.util.List;
 public class CustomerEntity {
 
     public CustomerEntity() {
-
-    }
-
-    public CustomerEntity(String userName, String firstName, String lastName, String emailAddress, String contactNumber, String password, String userStatus) {
-        this.userName = userName;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.emailAddress = emailAddress;
-        this.contactNumber = contactNumber;
-        this.password = password;
-        this.userStatus = userStatus;
+        this.userStatus = UserStatusState.ACTIVE.name();
     }
 
     @Id
@@ -51,12 +41,13 @@ public class CustomerEntity {
 //    @NotNull
     private String contactNumber;
 
-    //todo: masking of password before saving to DB
     private String password;
 
-    private String[] roles;
+    private String role;
 
     private String[] authorities;
+
+    private Date joinDate;
 
     private Date lastLoginDate;
 
@@ -130,12 +121,12 @@ public class CustomerEntity {
         this.password = password;
     }
 
-    public String[] getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoles(String[] roles) {
-        this.roles = roles;
+    public void setRole(String roles) {
+        this.role = roles;
     }
 
     public String[] getAuthorities() {
@@ -144,6 +135,14 @@ public class CustomerEntity {
 
     public void setAuthorities(String[] authorities) {
         this.authorities = authorities;
+    }
+
+    public Date getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate() {
+        this.joinDate = new Date();
     }
 
     public Date getLastLoginDate() {

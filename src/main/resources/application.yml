@@ -7,6 +7,9 @@ server:
     key-store: classpath:mykeystore.p12
     key-store-type: PKCS12
     key-alias: tomcat
+#  error:
+#    whitelabel:
+#      enabled: false
 
 spring:
   data:
@@ -20,3 +23,8 @@ spring:
     user:
       name: test
       password: test
+# custom handling /error for spring
+#  mvc:
+#    throw-exception-if-no-handler-found: true
+#  resources:
+#    add-mappings: false

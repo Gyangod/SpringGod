@@ -17,7 +17,9 @@ public class Customer {
 
     private String contactNumber;
 
-    private String[] roles;
+    private String password;
+
+    private String role;
 
     private String[] authorities;
 
@@ -77,12 +79,16 @@ public class Customer {
         this.contactNumber = contactNumber;
     }
 
-    public String[] getRoles() {
-        return roles;
+    public String getPassword() {
+        return password;
     }
 
-    public void setRoles(String[] roles) {
-        this.roles = roles;
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String[] getAuthorities() {
