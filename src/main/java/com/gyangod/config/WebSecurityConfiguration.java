@@ -39,6 +39,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B,14, SecureRandom.getInstance("NativePRNGBlocking"));
         return new BCryptPasswordEncoder();
     }
 

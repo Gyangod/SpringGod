@@ -33,7 +33,6 @@ public class CustomerController extends UserExceptionHandling {
     public ResponseEntity<Customer> loginUser(@RequestBody Customer customer) throws Exception {
         CustomerValidation.ValidateCustomer(customer);
         changeUserNameToLowerCase(customer);
-        CustomerValidation.LoginValidator(customer,customerService);
         Customer customer1 = customerService.loginUser(customer);
         HttpHeaders headers = getHttpHeaders(customer1);
         return new ResponseEntity<>(customer1,headers,HttpStatus.OK);

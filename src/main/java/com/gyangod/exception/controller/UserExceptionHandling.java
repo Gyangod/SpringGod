@@ -6,6 +6,7 @@ import com.gyangod.model.HttpResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -81,9 +82,9 @@ public class UserExceptionHandling extends ExceptionHandling{
         return createHttpResponse(BAD_REQUEST,USER_NAME_NOT_FOUND);
     }
 
-    @ExceptionHandler(PasswordNotMatchedException.class)
-    public ResponseEntity<HttpResponse> passwordNotMatchedException() {
-        return createHttpResponse(BAD_REQUEST,PASSWORD_DOES_NOT_MATCH);
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<HttpResponse> mediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
+        return createHttpResponse(NOT_ACCEPTABLE,e.getMessage());
     }
 
 }

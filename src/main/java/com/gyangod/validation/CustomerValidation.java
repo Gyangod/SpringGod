@@ -9,12 +9,15 @@ public class CustomerValidation {
 
     public static void ValidateCustomer(Customer customer) throws Exception {
         validateEntity(customer);
-        isUserNameBlank(customer.getUserName());
+        validateUserName(customer.getUserName());
     }
 
-    private static void isUserNameBlank(String userName) throws BlankFieldException {
+    private static void validateUserName(String userName) throws BlankFieldException, RegexMatchException {
         if(StringUtils.isBlank(userName)){
             throw new BlankFieldException("Username");
+        }
+        if(!userName.matches("^[a-z0-9_]{5,50}$")){
+            throw new RegexMatchException("Username must be small letters,numbers & underscore with 5 to 50 characters");
         }
     }
 
@@ -29,19 +32,6 @@ public class CustomerValidation {
     private static void validateEntity(Customer customer) throws ObjectNotFoundException {
         if(customer==null){
             throw new ObjectNotFoundException("Customer");
-        }
-    }
-
-    public static void LoginValidator(Customer customer,CustomerService service) throws Exception {
-        validateUserName(customer.getUserName(),service);
-        validatePassword(customer.getPassword());
-    }
-
-    private static void validateUserName(String userName, CustomerService service) throws UserNotFoundException, BlankFieldException {
-        if(StringUtils.isNotBlank(userName)){
-            service.findByUserName(userName);
-        } else {
-            throw new BlankFieldException("Username");
         }
     }
 
