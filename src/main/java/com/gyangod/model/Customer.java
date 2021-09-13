@@ -23,6 +23,8 @@ public class Customer {
 
     private String[] authorities;
 
+    private String jwtToken;
+
     public String getCustomerId() {
         return customerId;
     }
@@ -83,6 +85,10 @@ public class Customer {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getRole() {
         return role;
     }
@@ -97,5 +103,13 @@ public class Customer {
 
     public void setAuthorities(String[] authorities) {
         this.authorities = authorities;
+    }
+
+    public String getJwtToken() {
+        return jwtToken;
+    }
+
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
     }
 }

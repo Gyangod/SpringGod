@@ -1,15 +1,18 @@
 package com.gyangod.service;
 
 import com.gyangod.exception.domain.EmailNotFoundException;
+import com.gyangod.exception.domain.PasswordNotMatchedException;
 import com.gyangod.exception.domain.UserNotFoundException;
 import com.gyangod.model.UserPrincipal;
 import com.gyangod.utils.CustomerConversion;
 import com.gyangod.entity.CustomerEntity;
 import com.gyangod.model.Customer;
 import com.gyangod.repository.CustomerRepository;
+import com.gyangod.utils.JWTTokenProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,6 +32,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JWTTokenProvider jwtTokenProvider;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
@@ -72,6 +78,26 @@ public class CustomerServiceImpl implements CustomerService {
         customerEntity.setAuthorities(ROLE_STUDENT.getAuthorities());
         customerEntity.setJoinDate();
         return CustomerConversion.getCustomer(customerRepository.save(customerEntity));
+    }
+
+    @Override
+    public Customer loginUser(Customer customer) throws Exception {
+        CustomerEntity customerEntity = this.findByUserEntity(customer.getUserName());
+        if(!passwordEncoder.matches(customer.getPassword(),customerEntity.getPassword())) {
+            throw new PasswordNotMatchedException();
+        }
+        UserPrincipal principal = new UserPrincipal(customerEntity);
+        Customer customer1 = CustomerConversion.getCustomer(customerEntity);
+        customer1.setJwtToken(jwtTokenProvider.generateJwtToken(principal));
+        return customer1;
+    }
+
+    private CustomerEntity findByUserEntity(String userName) throws UserNotFoundException {
+        CustomerEntity customerEntity = customerRepository.findByUserName(userName);
+        if(customerEntity == null){
+            throw new UserNotFoundException();
+        }
+        return customerEntity;
     }
 
 }

@@ -1,9 +1,7 @@
 package com.gyangod.exception.controller;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.gyangod.exception.domain.EmailExistException;
-import com.gyangod.exception.domain.EmailNotFoundException;
-import com.gyangod.exception.domain.UsernameExistException;
+import com.gyangod.exception.domain.*;
 import com.gyangod.model.HttpResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
@@ -26,6 +24,7 @@ public class UserExceptionHandling extends ExceptionHandling{
     public static final String EMAIL_NOT_FOUND = "Email id is not registered with us. Please use a valid one";
     public static final String USER_NAME_EXIST = "User name already exists. Please login or create a new one";
     public static final String USER_NAME_NOT_FOUND = "User name is not found in the system. Please enter a valid one";
+    public static final String PASSWORD_DOES_NOT_MATCH = "The password you have entered does not match. You can click on forgot password to generate one";
 
     @ExceptionHandler(CredentialsExpiredException.class)
     public ResponseEntity<HttpResponse> accountDisabledException() {
@@ -75,6 +74,16 @@ public class UserExceptionHandling extends ExceptionHandling{
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<HttpResponse> usernameNotFoundException() {
         return createHttpResponse(BAD_REQUEST,USER_NAME_NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<HttpResponse> userNotFoundException() {
+        return createHttpResponse(BAD_REQUEST,USER_NAME_NOT_FOUND);
+    }
+
+    @ExceptionHandler(PasswordNotMatchedException.class)
+    public ResponseEntity<HttpResponse> passwordNotMatchedException() {
+        return createHttpResponse(BAD_REQUEST,PASSWORD_DOES_NOT_MATCH);
     }
 
 }

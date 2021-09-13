@@ -12,4 +12,6 @@ public interface CustomerService extends UserDetailsService {
     Customer findByEmailAddress(String emailAddress) throws EmailNotFoundException;
 
     Customer registerUser(Customer customer) throws Exception;
+
+    Customer loginUser(Customer customer) throws Exception;
 }

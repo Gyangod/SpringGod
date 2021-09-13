@@ -1,6 +1,7 @@
 package com.gyangod.exception.controller;
 
 import com.gyangod.exception.domain.BlankFieldException;
+import com.gyangod.exception.domain.ObjectNotFoundException;
 import com.gyangod.exception.domain.RegexMatchException;
 import com.gyangod.model.HttpResponse;
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +34,11 @@ public class ExceptionHandling implements ErrorController {
 
     @ExceptionHandler(RegexMatchException.class)
     public ResponseEntity<HttpResponse> regexMatchException(RegexMatchException e) {
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<HttpResponse> objectNotFoundException(ObjectNotFoundException e) {
         return createHttpResponse(BAD_REQUEST,e.getMessage());
     }
 
