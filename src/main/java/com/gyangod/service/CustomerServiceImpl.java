@@ -43,6 +43,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerLoginAttemptService loginAttemptService;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         UserPrincipal principal;
@@ -97,7 +100,9 @@ public class CustomerServiceImpl implements CustomerService {
         customerEntity.setRole(ROLE_STUDENT.name());
         customerEntity.setAuthorities(ROLE_STUDENT.getAuthorities());
         customerEntity.setJoinDate();
-        return CustomerConversion.getCustomer(customerRepository.save(customerEntity));
+        Customer customer1 = CustomerConversion.getCustomer(customerRepository.save(customerEntity));
+        emailService.sendNewPasswordEmail(customer1.getFirstName()+" "+customer1.getLastName(),customer.getPassword(),customer1.getEmailAddress());
+        return customer1;
     }
 
     @Override

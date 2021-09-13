@@ -1,5 +1,8 @@
 jwt:
   secret: thx5lf4VQmTcK_O0d0uFpfO-S-0KgnLAClGoG9boA375f7DThJISO-asDSHGzLb9YNbl60594IHvKwiyj7cPTgt5841lVt5P3bd1rXI_tF2WWXT_Gfs-0l4s3zO2h7ivC6oeY5NW1ELDCu9_sO9GTsvnfW1lzYO6VTGVp3ZOU-0DWgGKfSyCOHvUKgB23qt7McZhrzrj7wpNqw8otPrtQgT_RXHYLNHaXyIg5DdlZg7o3mTU2jr0pHmZLCsaY6ZaqcyiYsysdqELiz-c2Ef9OdznpSF3e5li1IksWcqPXmEvxWOeSSsGXEwi0O_ivCXBJTpKC7Bqs_GnBn7I7ZD9PQ
+email:
+  custom-password: Amar@12345
+
 server:
   port: 8443
   ssl:

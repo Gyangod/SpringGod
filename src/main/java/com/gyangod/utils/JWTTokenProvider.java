@@ -6,7 +6,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.gyangod.model.UserPrincipal;
+import com.gyangod.service.EmailService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +35,7 @@ import static java.util.Arrays.stream;
 
 @Component
 public class JWTTokenProvider {
+    private final Log log = LogFactory.getLog(JWTTokenProvider.class);
     //todo: TAKE key pair from more secured and consistent location
     /*KeyPairGenerator kpg;
     RSAPublicKey rsaPublicKey = null;
@@ -56,6 +60,7 @@ public class JWTTokenProvider {
 
     public String generateJwtToken(UserPrincipal principal){
         String[] claims = getClaimsForUser(principal);
+        log.info(jwtSecret);
         return JWT.create().withIssuer(GYANGOD_PVT_LTD).withIssuedAt(new Date())
                 .withAudience(GYANGOD_ADMINISTRATION)
                 .withSubject(principal.getUsername()).withArrayClaim(AUTHORITIES,claims)
