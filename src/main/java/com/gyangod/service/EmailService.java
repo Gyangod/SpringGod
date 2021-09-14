@@ -48,6 +48,7 @@ public class EmailService {
         message.setRecipients(CC, InternetAddress.parse(CC_EMAIL, false));
         message.setSubject(EMAIL_SUBJECT);
         message.setText("Hello " + firstName + ", \n \n Your new account password is: " + password + "\n \n The Support Team");
+//        message.setContent("","text/html");
         message.setSentDate(new Date());
         message.saveChanges();
         return message;

@@ -57,6 +57,8 @@ public class CustomerEntity {
 
     private String userStatus;
 
+    //todo: save image in cloud and save the string in db
+
     public String getCustomerId() {
         return _id;
     }

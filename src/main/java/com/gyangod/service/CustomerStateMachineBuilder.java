@@ -19,6 +19,7 @@ import static com.gyangod.constants.StateMachineConstant.CUSTOMER_STATE_MACHINE_
 
 public class CustomerStateMachineBuilder {
 
+    private static CustomerEntity returnEntity;
 
     /**
      *
@@ -29,19 +30,19 @@ public class CustomerStateMachineBuilder {
                                                                                  StateMachineFactory<UserStatusState, UserStatusEvents> stateUserStatusEventsStateMachineFactory){
         StateMachine<UserStatusState, UserStatusEvents> sm = stateUserStatusEventsStateMachineFactory.getStateMachine(customerEntity.getCustomerId());
         sm.stop();
-        sm.getStateMachineAccessor().doWithAllRegions(packageStatePackageEventsStateMachineAccess -> {
-            packageStatePackageEventsStateMachineAccess.addStateMachineInterceptor(new StateMachineInterceptorAdapter<>() {
+        sm.getStateMachineAccessor().doWithAllRegions(userStatusEventsStateMachineAccess -> {
+            userStatusEventsStateMachineAccess.addStateMachineInterceptor(new StateMachineInterceptorAdapter<>() {
 
                 @Override
                 public void preStateChange(State state, Message message, Transition transition, StateMachine stateMachine) {
                     Optional.ofNullable(message).ifPresent(msg-> Optional.ofNullable(msg.getHeaders().getOrDefault(CUSTOMER_STATE_MACHINE_HEADER,"default"))
                             .ifPresent(packageId -> {
                                 customerEntity.setUserStatus((UserStatusState) state.getId());
-                                customerRepository.save(customerEntity);
+                                CustomerStateMachineBuilder.returnEntity = customerRepository.save(customerEntity);
                             }));
                 }
             });
-            packageStatePackageEventsStateMachineAccess.resetStateMachine(
+            userStatusEventsStateMachineAccess.resetStateMachine(
                     new DefaultStateMachineContext<>(customerEntity.getUserStatus(),null,null,null));
         });
         sm.start();
@@ -55,10 +56,11 @@ public class CustomerStateMachineBuilder {
      * @param events need the event that need to pass
      * @param userStatusEventsStateMachineFactory need stateMachine factory
      */
-    public static void sendMessageToStateMachine(CustomerEntity customerEntity, CustomerRepository customerRepository,UserStatusEvents  events,
+    public static CustomerEntity sendMessageToStateMachine(CustomerEntity customerEntity, CustomerRepository customerRepository,UserStatusEvents  events,
                                                  StateMachineFactory<UserStatusState, UserStatusEvents> userStatusEventsStateMachineFactory){
         Message<UserStatusEvents> packageEventsMessage = MessageBuilder.withPayload(events).setHeader(CUSTOMER_STATE_MACHINE_HEADER,customerEntity.getUserStatus()).build();
         buildUserStateMachine(customerEntity,customerRepository,userStatusEventsStateMachineFactory).sendEvent(packageEventsMessage);
+        return CustomerStateMachineBuilder.returnEntity;
     }
 
 }
