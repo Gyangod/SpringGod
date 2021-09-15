@@ -9,12 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
+import static com.gyangod.constants.FileConstant.FORWARD_SLASH;
+import static com.gyangod.constants.FileConstant.USER_FOLDER;
 import static com.gyangod.constants.SecurityConstant.JWT_TOKEN_HEADER;
+import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
 @Controller
 @RequestMapping(path = {"/","/api/user"})
@@ -24,11 +33,11 @@ public class CustomerController extends UserExceptionHandling {
     private CustomerService customerService;
 
     @PostMapping(path = "/register")
-    public ResponseEntity<Customer> registerUser(@RequestBody Customer customer) throws Exception {
+    public ResponseEntity<Customer> registerUser(@RequestBody Customer customer,@RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws Exception {
         CustomerValidation.ValidateCustomer(customer);
         customer.setUserName(changeUserNameToLowerCase(customer.getUserName()));
         CustomerValidation.RegisterValidator(customer,customerService);
-        return new ResponseEntity<>(customerService.registerUser(customer),HttpStatus.OK);
+        return new ResponseEntity<>(customerService.registerUser(customer,profileImage),HttpStatus.OK);
     }
 
     @PostMapping(path = "/login")
@@ -48,28 +57,43 @@ public class CustomerController extends UserExceptionHandling {
     }
 
     @PostMapping(path = "/update/{userName}")
-    public ResponseEntity<Customer> updateUser(@PathVariable(value = "userName") String userName,@RequestBody Customer customer) throws Exception {
+    public ResponseEntity<Customer> updateUser(@PathVariable(value = "userName") String userName,@RequestBody Customer customer, @RequestHeader(JWT_TOKEN_HEADER) String jwtToken,
+                                               @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws Exception {
         CustomerValidation.ValidateCustomer(customer);
         customer.setUserName(changeUserNameToLowerCase(customer.getUserName()));
-        return new ResponseEntity<>(customerService.updateUser(userName,customer),HttpStatus.OK);
+        Customer newCustomer = customerService.updateUser(userName,customer,jwtToken,profileImage);
+        HttpHeaders headers = getHttpHeaders(newCustomer);
+        return new ResponseEntity<>(newCustomer,headers,HttpStatus.OK);
     }
 
-    @PostMapping(path = "/change/password/{password}")
-    public ResponseEntity<Customer> updatePassword(@PathVariable(value = "password") String password,@RequestBody Customer customer) throws Exception {
+    @PostMapping(path = "/change/password")
+    public ResponseEntity<Customer> updatePassword(@RequestParam(value = "password") String password,@RequestBody Customer customer) throws Exception {
         CustomerValidation.ValidateCustomer(customer);
         customer.setUserName(changeUserNameToLowerCase(customer.getUserName()));
         return new ResponseEntity<>(customerService.updatePassword(password,customer),HttpStatus.OK);
     }
 
     @GetMapping(path = "/change/status/{userName}/and/{event}")
+    @PreAuthorize("hasAnyAuthority('user:update')")
     public ResponseEntity<Customer> changeUserStatus(@PathVariable(value = "event") String event,@PathVariable(value = "userName") String userName) throws Exception {
         UserStatusEvents statusEvents = UserStatusEvents.valueOf(event);
         return new ResponseEntity<>(customerService.changeUserStatus(userName,statusEvents),HttpStatus.OK);
     }
 
     @GetMapping(path = "/get/all")
+    @PreAuthorize("hasAnyAuthority('user:update')")
     public ResponseEntity<List<Customer>> getAllUsers() throws Exception {
         return new ResponseEntity<>(customerService.getAllUsers(),HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/image/{username}/{fileName}", produces = {IMAGE_JPEG_VALUE,IMAGE_PNG_VALUE})
+    public byte[] getProfileImage(@PathVariable("username") String username, @PathVariable("fileName") String fileName) throws IOException {
+        return Files.readAllBytes(Paths.get(USER_FOLDER + username + FORWARD_SLASH + fileName));
+    }
+
+    @GetMapping(path = "/image/profile/{username}", produces = IMAGE_JPEG_VALUE)
+    public byte[] getTempProfileImage(@PathVariable("username") String username) throws Exception {
+        return customerService.getTempFiles(username);
     }
 
     @GetMapping(path = "/test")

@@ -55,6 +55,9 @@ public class CustomerEntity {
 
     private List<String> addresses;
 
+    private String imageLocation;
+
+    @NotNull
     private String userStatus;
 
     //todo: save image in cloud and save the string in db
@@ -169,6 +172,14 @@ public class CustomerEntity {
 
     public void setAddresses(List<String> addresses) {
         this.addresses = addresses;
+    }
+
+    public String getImageLocation() {
+        return imageLocation;
+    }
+
+    public void setImageLocation(String imageLocation) {
+        this.imageLocation = imageLocation;
     }
 
     public UserStatusState getUserStatus() {

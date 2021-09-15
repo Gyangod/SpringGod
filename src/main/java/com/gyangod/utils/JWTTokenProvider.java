@@ -24,7 +24,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;*/
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,6 +64,18 @@ public class JWTTokenProvider {
                 .withAudience(GYANGOD_ADMINISTRATION)
                 .withSubject(principal.getUsername()).withArrayClaim(AUTHORITIES,claims)
                 .withExpiresAt(new Date(System.currentTimeMillis()+EXPIRATION_TIME))
+                .sign(Algorithm.HMAC512(jwtSecret));
+    }
+
+    public String updateJwtToken(UserPrincipal principal,String oldToken) {
+        String[] claims = getClaimsForUser(principal);
+        log.info(jwtSecret);
+        Date issuesAt = JWT.decode(oldToken).getIssuedAt();
+        Date expiresAt = JWT.decode(oldToken).getExpiresAt();
+        return JWT.create().withIssuer(GYANGOD_PVT_LTD).withIssuedAt(issuesAt)
+                .withAudience(GYANGOD_ADMINISTRATION)
+                .withSubject(principal.getUsername()).withArrayClaim(AUTHORITIES,claims)
+                .withExpiresAt(expiresAt)
                 .sign(Algorithm.HMAC512(jwtSecret));
     }
 

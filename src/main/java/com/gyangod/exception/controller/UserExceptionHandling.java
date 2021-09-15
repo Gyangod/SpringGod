@@ -3,6 +3,7 @@ package com.gyangod.exception.controller;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.gyangod.exception.domain.*;
 import com.gyangod.model.HttpResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,6 +31,11 @@ public class UserExceptionHandling extends ExceptionHandling{
     @ExceptionHandler(CredentialsExpiredException.class)
     public ResponseEntity<HttpResponse> accountDisabledException() {
         return createHttpResponse(BAD_REQUEST,ACCOUNT_DISABLED);
+    }
+
+    @ExceptionHandler(NotAnImageFileException.class)
+    public ResponseEntity<HttpResponse> notAnImageFileException(NotAnImageFileException e) {
+        return createHttpResponse(UNPROCESSABLE_ENTITY,e.getMessage());
     }
 
     @ExceptionHandler(AccountExpiredException.class)

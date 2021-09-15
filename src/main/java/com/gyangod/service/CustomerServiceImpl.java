@@ -4,6 +4,7 @@ import com.gyangod.enums.UserRole;
 import com.gyangod.enums.statemachine.UserStatusEvents;
 import com.gyangod.enums.statemachine.UserStatusState;
 import com.gyangod.exception.domain.EmailNotFoundException;
+import com.gyangod.exception.domain.NotAnImageFileException;
 import com.gyangod.exception.domain.UserNotFoundException;
 import com.gyangod.model.UserPrincipal;
 import com.gyangod.utils.CustomerConversion;
@@ -25,11 +26,25 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.NoResultException;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import static com.gyangod.constants.FileConstant.*;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.springframework.http.MediaType.*;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -106,12 +121,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer registerUser(Customer customer) throws Exception {
+    public Customer registerUser(Customer customer, MultipartFile profileImage) throws Exception {
         CustomerEntity customerEntity = CustomerConversion.getCustomerEntity(customer);
         customerEntity.setPassword(passwordEncoder.encode(customer.getPassword()));
         customerEntity.setRole(this.getUserRoleEnum(customer.getRole()));
         customerEntity.setAuthorities(UserRole.valueOf(customerEntity.getRole()).getAuthorities());
         customerEntity.setJoinDate();
+        customerEntity.setImageLocation(saveProfileImage(customerEntity, profileImage));
         return CustomerConversion.getCustomer(customerRepository.save(customerEntity));
     }
 
@@ -124,13 +140,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer updateUser(String currentUserName, Customer customer) throws Exception {
+    public Customer updateUser(String currentUserName, Customer customer, String oldToken, MultipartFile profileImage) throws Exception {
         CustomerEntity entity = this.findByUserName(currentUserName);
         CustomerValidation.UpdateValidator(currentUserName,entity,customer,this);
         CustomerEntity newEntity = CustomerConversion.updateEntity(entity,customer);
         newEntity.setRole(this.getUserRoleEnum(customer.getRole()));
         newEntity.setAuthorities(UserRole.valueOf(newEntity.getRole()).getAuthorities());
-        return CustomerConversion.getCustomer(customerRepository.save(entity));
+        entity.setImageLocation(saveProfileImage(entity, profileImage));
+        CustomerEntity customerEntity  = customerRepository.save(entity);
+        //Update Jwt Token to the updated user
+        UserPrincipal principal =  new UserPrincipal(customerEntity);
+        Customer newCustomer = CustomerConversion.getCustomer(customerEntity);
+        newCustomer.setJwtToken(jwtTokenProvider.updateJwtToken(principal,oldToken));
+        return newCustomer;
     }
 
     @Override
@@ -179,6 +201,20 @@ public class CustomerServiceImpl implements CustomerService {
         return customers;
     }
 
+    @Override
+    public byte[] getTempFiles(String userName) throws Exception {
+        URL url = new URL(TEMP_PROFILE_IMAGE_BASE_URL + userName);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try (InputStream inputStream = url.openStream()) {
+            int bytesRead;
+            byte[] chunk = new byte[1024];
+            while((bytesRead = inputStream.read(chunk)) > 0) {
+                byteArrayOutputStream.write(chunk, 0, bytesRead);
+            }
+        }
+        return byteArrayOutputStream.toByteArray();
+    }
+
     private String randomPassword() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:,<.>/?";
         return RandomStringUtils.random( 10, characters );
@@ -190,6 +226,29 @@ public class CustomerServiceImpl implements CustomerService {
 
     private String getUserRoleEnum(String role){
         return UserRole.valueOf(role.toUpperCase()).name();
+    }
+
+    private String saveProfileImage(CustomerEntity customerEntity, MultipartFile profileImage) throws NotAnImageFileException, IOException {
+        if (profileImage != null) {
+            if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())) {
+                throw new NotAnImageFileException(profileImage.getOriginalFilename() + NOT_AN_IMAGE_FILE);
+            }
+            Path userFolder = Paths.get(USER_FOLDER + customerEntity.getUserName()).toAbsolutePath().normalize();
+            if(!Files.exists(userFolder)) {
+                Files.createDirectories(userFolder);
+                LOGGER.info(DIRECTORY_CREATED + userFolder);
+            }
+            Files.deleteIfExists(Paths.get(userFolder + customerEntity.getUserName() + DOT + JPG_EXTENSION));
+            Files.copy(profileImage.getInputStream(), userFolder.resolve(customerEntity.getUserName() + DOT + JPG_EXTENSION), REPLACE_EXISTING);
+            LOGGER.info(FILE_SAVED_IN_FILE_SYSTEM + profileImage.getOriginalFilename());
+            return setProfileImageUrl(customerEntity.getUserName());
+        }
+        return null;
+    }
+
+    private String setProfileImageUrl(String username) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(USER_IMAGE_PATH + username + FORWARD_SLASH
+                + username + DOT + JPG_EXTENSION).toUriString();
     }
 
     //todo: Stop normal users to create role operator and admin
