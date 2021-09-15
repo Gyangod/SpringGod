@@ -11,10 +11,12 @@ import com.gyangod.entity.CustomerEntity;
 import com.gyangod.model.Customer;
 import com.gyangod.repository.CustomerRepository;
 import com.gyangod.utils.JWTTokenProvider;
+import com.gyangod.validation.CustomerValidation;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,6 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
     private EmailService emailService;
 
     @Autowired
+    @Qualifier("user")
     private StateMachineFactory<UserStatusState, UserStatusEvents> stateMachineFactory;
 
     @Override
@@ -122,11 +125,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer updateUser(String currentUserName, Customer customer) throws Exception {
-        CustomerEntity entity = CustomerConversion.updateEntity(this.findByUserName(currentUserName),customer);
-        entity.setRole(this.getUserRoleEnum(customer.getRole()));
-        entity.setAuthorities(UserRole.valueOf(entity.getRole()).getAuthorities());
-        customer = CustomerConversion.getCustomer(customerRepository.save(entity));
-        return customer;
+        CustomerEntity entity = this.findByUserName(currentUserName);
+        CustomerValidation.UpdateValidator(currentUserName,entity,customer,this);
+        CustomerEntity newEntity = CustomerConversion.updateEntity(entity,customer);
+        newEntity.setRole(this.getUserRoleEnum(customer.getRole()));
+        newEntity.setAuthorities(UserRole.valueOf(newEntity.getRole()).getAuthorities());
+        return CustomerConversion.getCustomer(customerRepository.save(entity));
     }
 
     @Override
@@ -137,9 +141,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer changeUserStatus(Customer customer,UserStatusEvents event) throws Exception {
+    public Customer changeUserStatus(String userName,UserStatusEvents event) throws Exception {
         return CustomerConversion.getCustomer(CustomerStateMachineBuilder.sendMessageToStateMachine
-                (this.findByUserName(customer.getUserName()),customerRepository,event,stateMachineFactory));
+                (this.findByUserName(userName),customerRepository,event,stateMachineFactory));
     }
 
     @Override
@@ -156,7 +160,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer resetPassword(Customer customer) throws Exception {
         CustomerEntity entity = this.findByEmailAddress(customer.getEmailAddress());
         if(!entity.getUserName().equals(customer.getUserName())) {
-            throw new NoResultException("You are eligible");
+            throw new NoResultException("You are not allowed");
         }
         String password = randomPassword();
         entity.setPassword(passwordEncoder.encode(password));

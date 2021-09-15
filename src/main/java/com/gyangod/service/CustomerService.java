@@ -23,7 +23,7 @@ public interface CustomerService extends UserDetailsService {
     //todo: make it by id
     boolean deleteUser(Customer customer) throws Exception;
 
-    Customer changeUserStatus(Customer customer, UserStatusEvents event) throws Exception;
+    Customer changeUserStatus(String userName, UserStatusEvents event) throws Exception;
 
     Customer updatePassword(String oldPassword, Customer customer) throws Exception;
 

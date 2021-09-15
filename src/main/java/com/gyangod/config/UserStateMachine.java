@@ -3,6 +3,7 @@ package com.gyangod.config;
 import com.gyangod.enums.statemachine.UserStatusEvents;
 import com.gyangod.enums.statemachine.UserStatusState;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -13,6 +14,7 @@ import org.springframework.statemachine.state.State;
 import static com.gyangod.constants.StateMachineConstant.CUSTOMER_STATE_MACHINE_HEADER;
 
 @Configuration
+@EnableStateMachineFactory(name = "user")
 public class UserStateMachine extends StateMachineConfigurerAdapter<UserStatusState, UserStatusEvents> {
 
     @Override

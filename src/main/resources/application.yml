@@ -21,7 +21,9 @@ spring:
       port: 27017
       host: localhost
       auto-index-creation: true
-
+#  datasource:
+#    url: jdbc:mongodb://localhost/user_db
+#    driver-class-name: class-name=mongodb.jdbc.MongoDriver
   security:
     user:
       name: test

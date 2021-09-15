@@ -1,5 +1,6 @@
 package com.gyangod.validation;
 
+import com.gyangod.entity.CustomerEntity;
 import com.gyangod.exception.domain.*;
 import com.gyangod.model.Customer;
 import com.gyangod.service.CustomerService;
@@ -12,6 +13,18 @@ public class CustomerValidation {
         validateUserName(customer.getUserName());
     }
 
+    public static void RegisterValidator(Customer customer, CustomerService service) throws Exception{
+        validateNewUserName(customer.getUserName(),service);
+        validateNewEmail(customer.getEmailAddress(),service);
+        validateFirstName(customer.getFirstName());
+        validatePassword(customer.getPassword());
+    }
+
+    public static void UpdateValidator(String oldUserName,CustomerEntity previousEntity,Customer customer, CustomerService service) throws Exception {
+//        validateNewEmail(customer.getEmailAddress(),service);
+        validateFirstName(customer.getFirstName());
+    }
+
     private static void validateUserName(String userName) throws BlankFieldException, RegexMatchException {
         if(StringUtils.isBlank(userName)){
             throw new BlankFieldException("Username");
@@ -19,14 +32,6 @@ public class CustomerValidation {
         if(!userName.matches("^[a-z0-9_]{5,50}$")){
             throw new RegexMatchException("Username must be small letters,numbers & underscore with 5 to 50 characters");
         }
-    }
-
-    public static void RegisterValidator(Customer customer, CustomerService service) throws Exception{
-        validateEntity(customer);
-        validateNewUserName(customer.getUserName(),service);
-        validateNewEmail(customer.getEmailAddress(),service);
-        validateFirstName(customer.getFirstName());
-        validatePassword(customer.getPassword());
     }
 
     private static void validateEntity(Customer customer) throws ObjectNotFoundException {

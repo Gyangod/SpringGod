@@ -14,7 +14,7 @@ import org.springframework.statemachine.state.State;
 import static com.gyangod.constants.StateMachineConstant.PACKAGE_STATE_MACHINE_HEADER;
 
 @Configuration
-@EnableStateMachineFactory
+@EnableStateMachineFactory(name = "package")
 public class PackageStateMachine extends StateMachineConfigurerAdapter<PackageState, PackageEvents> {
 
     @Override
