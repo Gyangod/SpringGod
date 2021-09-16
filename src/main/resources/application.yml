@@ -21,7 +21,10 @@ spring:
       port: 27017
       host: localhost
       auto-index-creation: true
-#  datasource:
+  servlet:
+    multipart:
+      max-file-size: 3MB
+  #  datasource:
 #    url: jdbc:mongodb://localhost/user_db
 #    driver-class-name: class-name=mongodb.jdbc.MongoDriver
   security:

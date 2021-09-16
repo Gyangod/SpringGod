@@ -4,6 +4,7 @@ public class SecurityConstant {
     public static final long EXPIRATION_TIME = 604_800_000; //7 days
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String JWT_TOKEN_HEADER = "Jwt-Token";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified";
     public static final String GYANGOD_PVT_LTD = "Gyangod Literacy Technologies Pvt. Ltd.";
     public static final String GYANGOD_ADMINISTRATION = "User Management Portal";

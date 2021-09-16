@@ -3,15 +3,12 @@ package com.gyangod.exception.controller;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.gyangod.exception.domain.*;
 import com.gyangod.model.HttpResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.nio.file.AccessDeniedException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -21,7 +18,6 @@ public class UserExceptionHandling extends ExceptionHandling{
     public static final String ACCOUNT_DISABLED = "Your account has been disabled. If this is an error, please contact administration";
     public static final String ACCOUNT_EXPIRED = "Your account has expired due to some issues, please verify again and login";
     public static final String INCORRECT_CREDENTIALS = "Username / Password incorrect. Please try again";
-    public static final String NOT_ENOUGH_PERMISSION = "You do not have enough permission";
     public static final String EMAIL_EXIST = "Email id is registered with us. Please use login";
     public static final String EMAIL_NOT_FOUND = "Email id is not registered with us. Please use a valid one";
     public static final String USER_NAME_EXIST = "User name already exists. Please login or create a new one";
@@ -46,11 +42,6 @@ public class UserExceptionHandling extends ExceptionHandling{
     @ExceptionHandler(LockedException.class)
     public ResponseEntity<HttpResponse> accountLockedException() {
         return createHttpResponse(LOCKED,ACCOUNT_LOCKED);
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<HttpResponse> accessDeniedException() {
-        return createHttpResponse(UNAUTHORIZED,NOT_ENOUGH_PERMISSION);
     }
 
     @ExceptionHandler(BadCredentialsException.class)

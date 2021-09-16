@@ -21,6 +21,7 @@ public class CustomerValidation {
     }
 
     public static void UpdateValidator(String oldUserName,CustomerEntity previousEntity,Customer customer, CustomerService service) throws Exception {
+        //todo: complete it
 //        validateNewEmail(customer.getEmailAddress(),service);
         validateFirstName(customer.getFirstName());
     }

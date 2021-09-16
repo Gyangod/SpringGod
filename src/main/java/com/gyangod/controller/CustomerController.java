@@ -21,26 +21,27 @@ import java.util.List;
 
 import static com.gyangod.constants.FileConstant.FORWARD_SLASH;
 import static com.gyangod.constants.FileConstant.USER_FOLDER;
+import static com.gyangod.constants.SecurityConstant.AUTHORIZATION_HEADER;
 import static com.gyangod.constants.SecurityConstant.JWT_TOKEN_HEADER;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
 @Controller
-@RequestMapping(path = {"/","/api/user"})
+@RequestMapping(value = {"/","/api/user"})
 public class CustomerController extends UserExceptionHandling {
 
     @Autowired
     private CustomerService customerService;
 
     @PostMapping(path = "/register")
-    public ResponseEntity<Customer> registerUser(@RequestBody Customer customer,@RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws Exception {
+    public ResponseEntity<Customer> registerUser(@RequestBody Customer customer) throws Exception {
         CustomerValidation.ValidateCustomer(customer);
         customer.setUserName(changeUserNameToLowerCase(customer.getUserName()));
         CustomerValidation.RegisterValidator(customer,customerService);
-        return new ResponseEntity<>(customerService.registerUser(customer,profileImage),HttpStatus.OK);
+        return new ResponseEntity<>(customerService.registerUser(customer),HttpStatus.OK);
     }
 
-    @PostMapping(path = "/login")
+    @PostMapping(value = "/login")
     public ResponseEntity<Customer> loginUser(@RequestBody Customer customer) throws Exception {
         CustomerValidation.ValidateCustomer(customer);
         customer.setUserName(changeUserNameToLowerCase(customer.getUserName()));
@@ -56,12 +57,11 @@ public class CustomerController extends UserExceptionHandling {
         return new ResponseEntity<>(customerService.resetPassword(customer),HttpStatus.OK);
     }
 
-    @PostMapping(path = "/update/{userName}")
-    public ResponseEntity<Customer> updateUser(@PathVariable(value = "userName") String userName,@RequestBody Customer customer, @RequestHeader(JWT_TOKEN_HEADER) String jwtToken,
-                                               @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws Exception {
+    @PostMapping(value = "/update/{userName}")
+    public ResponseEntity<Customer> updateUser(@PathVariable(value = "userName") String userName,@RequestBody Customer customer, @RequestHeader(AUTHORIZATION_HEADER) String jwtToken) throws Exception {
         CustomerValidation.ValidateCustomer(customer);
         customer.setUserName(changeUserNameToLowerCase(customer.getUserName()));
-        Customer newCustomer = customerService.updateUser(userName,customer,jwtToken,profileImage);
+        Customer newCustomer = customerService.updateUser(userName,customer,jwtToken.split(" ")[1]);
         HttpHeaders headers = getHttpHeaders(newCustomer);
         return new ResponseEntity<>(newCustomer,headers,HttpStatus.OK);
     }
@@ -73,7 +73,7 @@ public class CustomerController extends UserExceptionHandling {
         return new ResponseEntity<>(customerService.updatePassword(password,customer),HttpStatus.OK);
     }
 
-    @GetMapping(path = "/change/status/{userName}/and/{event}")
+    @GetMapping(value = "/change/status/{userName}/and/{event}")
     @PreAuthorize("hasAnyAuthority('user:update')")
     public ResponseEntity<Customer> changeUserStatus(@PathVariable(value = "event") String event,@PathVariable(value = "userName") String userName) throws Exception {
         UserStatusEvents statusEvents = UserStatusEvents.valueOf(event);

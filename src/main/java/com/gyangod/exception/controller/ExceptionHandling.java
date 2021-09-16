@@ -1,5 +1,6 @@
 package com.gyangod.exception.controller;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.gyangod.exception.domain.BlankFieldException;
 import com.gyangod.exception.domain.ObjectNotFoundException;
 import com.gyangod.exception.domain.RegexMatchException;
@@ -11,10 +12,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import javax.persistence.NoResultException;
 import java.io.IOException;
@@ -30,16 +33,29 @@ public class ExceptionHandling implements ErrorController {
     private static final String INTERNAL_SERVER_ERROR_MSG = "An error occurred while processing a request. Please report the bug";
     private static final String ERROR_PROCESSING_FILE = "Error occurred while processing file";
     private static final String PAGE_NOT_FOUND = "The page you requested is not mapped";
+    private static final String MAXFILE_SIZE = "The maximum file size is 2 MB";
     public static final String ERROR_PATH = "/error";
+    public static final String NOT_ENOUGH_PERMISSION = "You do not have enough permission";
 
     @ExceptionHandler(RegexMatchException.class)
     public ResponseEntity<HttpResponse> regexMatchException(RegexMatchException e) {
         return createHttpResponse(BAD_REQUEST,e.getMessage());
     }
 
+    @ExceptionHandler(JWTVerificationException.class)
+    public ResponseEntity<HttpResponse> regexMatchException(JWTVerificationException e) {
+        return createHttpResponse(FORBIDDEN,e.getMessage());
+    }
+
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<HttpResponse> objectNotFoundException(ObjectNotFoundException e) {
         return createHttpResponse(BAD_REQUEST,e.getMessage());
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<HttpResponse> maximumSizeException(MaxUploadSizeExceededException e) {
+        LOGGER.error(e);
+        return createHttpResponse(BANDWIDTH_LIMIT_EXCEEDED,MAXFILE_SIZE);
     }
 
     @ExceptionHandler(BlankFieldException.class)
@@ -75,6 +91,10 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse> internalServerErrorException(Exception e) {
         LOGGER.error(e);
         return createHttpResponse(INTERNAL_SERVER_ERROR,INTERNAL_SERVER_ERROR_MSG);
+    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<HttpResponse> accessDeniedException() {
+        return createHttpResponse(UNAUTHORIZED,NOT_ENOUGH_PERMISSION);
     }
 
     protected ResponseEntity<HttpResponse> createHttpResponse(HttpStatus status, String message){

@@ -6,7 +6,6 @@ import com.gyangod.exception.domain.EmailNotFoundException;
 import com.gyangod.exception.domain.UserNotFoundException;
 import com.gyangod.model.Customer;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,11 +15,11 @@ public interface CustomerService extends UserDetailsService {
 
     CustomerEntity findByEmailAddress(String emailAddress) throws EmailNotFoundException;
 
-    Customer registerUser(Customer customer, MultipartFile profileImage) throws Exception;
+    Customer registerUser(Customer customer) throws Exception;
 
     Customer loginUser(Customer customer) throws Exception;
 
-    Customer updateUser(String currentUserName,Customer customer,String oldToken, MultipartFile profileImage) throws Exception;
+    Customer updateUser(String currentUserName,Customer customer,String oldToken) throws Exception;
     //todo: make it by id
     boolean deleteUser(Customer customer) throws Exception;
 

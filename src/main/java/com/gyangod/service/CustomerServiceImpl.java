@@ -3,6 +3,7 @@ package com.gyangod.service;
 import com.gyangod.enums.UserRole;
 import com.gyangod.enums.statemachine.UserStatusEvents;
 import com.gyangod.enums.statemachine.UserStatusState;
+import com.gyangod.exception.domain.BlankFieldException;
 import com.gyangod.exception.domain.EmailNotFoundException;
 import com.gyangod.exception.domain.NotAnImageFileException;
 import com.gyangod.exception.domain.UserNotFoundException;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.gyangod.constants.FileConstant.*;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -84,7 +87,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerEntity.setLastLoginDateDisplay(customerEntity.getLastLoginDate());
             customerEntity.setLastLoginDate(new Date());
             customerEntity = customerRepository.save(customerEntity);
-            LOGGER.info("Found user by username" + userName);
+            LOGGER.info("Found user by username " + userName);
             principal = new UserPrincipal(customerEntity);
         }
         return principal;
@@ -121,13 +124,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer registerUser(Customer customer, MultipartFile profileImage) throws Exception {
+    public Customer registerUser(Customer customer) throws Exception {
         CustomerEntity customerEntity = CustomerConversion.getCustomerEntity(customer);
         customerEntity.setPassword(passwordEncoder.encode(customer.getPassword()));
         customerEntity.setRole(this.getUserRoleEnum(customer.getRole()));
         customerEntity.setAuthorities(UserRole.valueOf(customerEntity.getRole()).getAuthorities());
         customerEntity.setJoinDate();
-        customerEntity.setImageLocation(saveProfileImage(customerEntity, profileImage));
+//        customerEntity.setImageLocation(saveProfileImage(customerEntity, profileImage));
         return CustomerConversion.getCustomer(customerRepository.save(customerEntity));
     }
 
@@ -136,17 +139,20 @@ public class CustomerServiceImpl implements CustomerService {
         authenticate(customer.getUserName(), customer.getPassword());
         UserPrincipal principal = (UserPrincipal) this.loadUserByUsername(customer.getUserName());
         customer.setJwtToken(jwtTokenProvider.generateJwtToken(principal));
+        customer.setPassword(null);
+        customer.setAuthorities(principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).toArray(String[]::new));
+        customer.setRole(principal.getUserRole());
         return customer;
     }
 
     @Override
-    public Customer updateUser(String currentUserName, Customer customer, String oldToken, MultipartFile profileImage) throws Exception {
+    public Customer updateUser(String currentUserName, Customer customer, String oldToken) throws Exception {
         CustomerEntity entity = this.findByUserName(currentUserName);
         CustomerValidation.UpdateValidator(currentUserName,entity,customer,this);
         CustomerEntity newEntity = CustomerConversion.updateEntity(entity,customer);
         newEntity.setRole(this.getUserRoleEnum(customer.getRole()));
         newEntity.setAuthorities(UserRole.valueOf(newEntity.getRole()).getAuthorities());
-        entity.setImageLocation(saveProfileImage(entity, profileImage));
+//        entity.setImageLocation(saveProfileImage(entity, profileImage));
         CustomerEntity customerEntity  = customerRepository.save(entity);
         //Update Jwt Token to the updated user
         UserPrincipal principal =  new UserPrincipal(customerEntity);
@@ -224,8 +230,12 @@ public class CustomerServiceImpl implements CustomerService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
     }
 
-    private String getUserRoleEnum(String role){
-        return UserRole.valueOf(role.toUpperCase()).name();
+    private String getUserRoleEnum(String role) throws BlankFieldException {
+       try{
+           return UserRole.valueOf(role.toUpperCase()).name();
+       } catch(Exception e){
+           throw new BlankFieldException("proper 'role'");
+       }
     }
 
     private String saveProfileImage(CustomerEntity customerEntity, MultipartFile profileImage) throws NotAnImageFileException, IOException {

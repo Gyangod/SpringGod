@@ -23,6 +23,10 @@ public class UserPrincipal implements UserDetails {
         return stream(this.customer.getAuthorities()).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
+    public String getUserRole(){
+        return this.customer.getRole();
+    }
+
     @Override
     public String getPassword() {
         return this.customer.getPassword();
