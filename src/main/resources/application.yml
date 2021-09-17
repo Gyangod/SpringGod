@@ -23,7 +23,7 @@ spring:
       auto-index-creation: true
   servlet:
     multipart:
-      max-file-size: 3MB
+      max-file-size: 2MB
   #  datasource:
 #    url: jdbc:mongodb://localhost/user_db
 #    driver-class-name: class-name=mongodb.jdbc.MongoDriver
@@ -31,8 +31,3 @@ spring:
     user:
       name: test
       password: test
-# custom handling /error for spring
-#  mvc:
-#    throw-exception-if-no-handler-found: true
-#  resources:
-#    add-mappings: false

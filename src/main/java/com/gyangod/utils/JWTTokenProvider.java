@@ -76,6 +76,10 @@ public class JWTTokenProvider {
                 .sign(Algorithm.HMAC512(jwtSecret));
     }
 
+    public String returnUserName(String token){
+        return JWT.decode(token).getSubject().toLowerCase();
+    }
+
     private String[] getClaimsForUser(UserPrincipal principal) {
         List<String> authorities = new ArrayList<>();
         for(GrantedAuthority authority: principal.getAuthorities()){

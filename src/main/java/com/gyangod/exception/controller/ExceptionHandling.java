@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.gyangod.exception.domain.BlankFieldException;
 import com.gyangod.exception.domain.ObjectNotFoundException;
 import com.gyangod.exception.domain.RegexMatchException;
+import com.gyangod.exception.domain.UnauthorizedException;
 import com.gyangod.model.HttpResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -45,6 +47,21 @@ public class ExceptionHandling implements ErrorController {
     @ExceptionHandler(JWTVerificationException.class)
     public ResponseEntity<HttpResponse> regexMatchException(JWTVerificationException e) {
         return createHttpResponse(FORBIDDEN,e.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<HttpResponse> customUnauthorizedException(UnauthorizedException e) {
+        return createHttpResponse(UNAUTHORIZED,e.getMessage());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<HttpResponse> customUnauthorizedException(MissingServletRequestParameterException e) {
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<HttpResponse> customUnauthorizedException(IllegalArgumentException e) {
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
     }
 
     @ExceptionHandler(ObjectNotFoundException.class)

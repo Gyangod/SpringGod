@@ -17,6 +17,7 @@ public class CustomerConversion {
         entity.setPassword(customer.getPassword());
         entity.setRole(customer.getRole());
         entity.setAuthorities(customer.getAuthorities());
+        entity.setImageLocation(customer.getProfilePic());
         return entity;
     }
 
@@ -32,6 +33,7 @@ public class CustomerConversion {
 //        entity.setPassword(customer.getPassword());
         entity.setRole(customer.getRole());
         entity.setAuthorities(customer.getAuthorities());
+        entity.setProfilePic(customer.getImageLocation());
         return entity;
     }
 

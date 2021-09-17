@@ -66,11 +66,19 @@ public class CustomerController extends UserExceptionHandling {
         return new ResponseEntity<>(newCustomer,headers,HttpStatus.OK);
     }
 
+    @PostMapping(value = "/save/picture/{userName}")
+    public ResponseEntity<Customer> saveUserPicture(@PathVariable(value = "userName") String userName,@RequestParam(value = "picture") MultipartFile file,
+                                                    @RequestHeader(AUTHORIZATION_HEADER) String jwtToken) throws Exception {
+        return new ResponseEntity<>(customerService.updatePicture(userName,file,jwtToken.split(" ")[1]),HttpStatus.OK);
+    }
+
     @PostMapping(path = "/change/password")
-    public ResponseEntity<Customer> updatePassword(@RequestParam(value = "password") String password,@RequestBody Customer customer) throws Exception {
+    public ResponseEntity<Customer> updatePassword(@RequestParam(value = "password") String password,@RequestBody Customer customer,
+                                                   @RequestHeader(AUTHORIZATION_HEADER) String jwtToken) throws Exception {
         CustomerValidation.ValidateCustomer(customer);
         customer.setUserName(changeUserNameToLowerCase(customer.getUserName()));
-        return new ResponseEntity<>(customerService.updatePassword(password,customer),HttpStatus.OK);
+        CustomerValidation.validatePassword(customer.getPassword());
+        return new ResponseEntity<>(customerService.updatePassword(password,customer,jwtToken.split(" ")[1]),HttpStatus.OK);
     }
 
     @GetMapping(value = "/change/status/{userName}/and/{event}")
@@ -82,8 +90,9 @@ public class CustomerController extends UserExceptionHandling {
 
     @GetMapping(path = "/get/all")
     @PreAuthorize("hasAnyAuthority('user:update')")
-    public ResponseEntity<List<Customer>> getAllUsers() throws Exception {
-        return new ResponseEntity<>(customerService.getAllUsers(),HttpStatus.OK);
+    public ResponseEntity<List<Customer>> getAllUsers( @RequestParam(value = "page") Integer pageNo, @RequestParam(value = "size") Integer pageSize, @RequestParam(value="sort",required = false) String sortBy,
+                                                       @RequestParam(value = "asc",defaultValue = "true") boolean ascending) throws Exception {
+        return new ResponseEntity<>(customerService.getAllUsers(pageNo,pageSize,sortBy,ascending),HttpStatus.OK);
     }
 
     @GetMapping(path = "/image/{username}/{fileName}", produces = {IMAGE_JPEG_VALUE,IMAGE_PNG_VALUE})

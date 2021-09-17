@@ -3,10 +3,7 @@ package com.gyangod.service;
 import com.gyangod.enums.UserRole;
 import com.gyangod.enums.statemachine.UserStatusEvents;
 import com.gyangod.enums.statemachine.UserStatusState;
-import com.gyangod.exception.domain.BlankFieldException;
-import com.gyangod.exception.domain.EmailNotFoundException;
-import com.gyangod.exception.domain.NotAnImageFileException;
-import com.gyangod.exception.domain.UserNotFoundException;
+import com.gyangod.exception.domain.*;
 import com.gyangod.model.UserPrincipal;
 import com.gyangod.utils.CustomerConversion;
 import com.gyangod.entity.CustomerEntity;
@@ -19,6 +16,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,7 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.persistence.NoResultException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -147,12 +147,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer updateUser(String currentUserName, Customer customer, String oldToken) throws Exception {
+        if(!jwtTokenProvider.returnUserName(oldToken).equals(currentUserName)){
+            throw new UnauthorizedException();
+        }
         CustomerEntity entity = this.findByUserName(currentUserName);
-        CustomerValidation.UpdateValidator(currentUserName,entity,customer,this);
+        CustomerValidation.UpdateValidator(entity,customer,this);
         CustomerEntity newEntity = CustomerConversion.updateEntity(entity,customer);
         newEntity.setRole(this.getUserRoleEnum(customer.getRole()));
         newEntity.setAuthorities(UserRole.valueOf(newEntity.getRole()).getAuthorities());
-//        entity.setImageLocation(saveProfileImage(entity, profileImage));
         CustomerEntity customerEntity  = customerRepository.save(entity);
         //Update Jwt Token to the updated user
         UserPrincipal principal =  new UserPrincipal(customerEntity);
@@ -169,13 +171,26 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Customer updatePicture(String userName, MultipartFile profileImage, String jwtToken) throws Exception {
+        if(!jwtTokenProvider.returnUserName(jwtToken).equals(userName)){
+            throw new UnauthorizedException();
+        }
+        CustomerEntity customerEntity = this.findByUserName(userName);
+        customerEntity.setImageLocation(saveProfileImage(customerEntity, profileImage));
+        return CustomerConversion.getCustomer(customerRepository.save(customerEntity));
+    }
+
+    @Override
     public Customer changeUserStatus(String userName,UserStatusEvents event) throws Exception {
         return CustomerConversion.getCustomer(CustomerStateMachineBuilder.sendMessageToStateMachine
                 (this.findByUserName(userName),customerRepository,event,stateMachineFactory));
     }
 
     @Override
-    public Customer updatePassword(String oldPassword, Customer customer) throws Exception {
+    public Customer updatePassword(String oldPassword, Customer customer, String jwtToken) throws Exception {
+        if(!jwtTokenProvider.returnUserName(jwtToken).equals(customer.getUserName())){
+            throw new UnauthorizedException();
+        }
         CustomerEntity entity = this.findByUserName(customer.getUserName());
         if(!passwordEncoder.matches(oldPassword,entity.getPassword())){
             throw new BadCredentialsException("Password Incorrect");
@@ -188,7 +203,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer resetPassword(Customer customer) throws Exception {
         CustomerEntity entity = this.findByEmailAddress(customer.getEmailAddress());
         if(!entity.getUserName().equals(customer.getUserName())) {
-            throw new NoResultException("You are not allowed");
+            throw new UnauthorizedException();
         }
         String password = randomPassword();
         entity.setPassword(passwordEncoder.encode(password));
@@ -198,9 +213,15 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getAllUsers() throws Exception {
+    public List<Customer> getAllUsers(Integer pageNo, Integer pageSize, String sortBy, boolean ascending) throws Exception {
+        Pageable paging;
+        if(sortBy != null){
+            paging = (ascending) ? PageRequest.of(pageNo,pageSize, Sort.Direction.ASC,sortBy) : PageRequest.of(pageNo,pageSize, Sort.Direction.DESC,sortBy) ;
+        }else {
+            paging = PageRequest.of(pageNo,pageSize);
+        }
         List<Customer> customers = new ArrayList<>();
-        List<CustomerEntity> customerEntities = customerRepository.findAll();
+        Page<CustomerEntity> customerEntities = customerRepository.findAll(paging);
         for (CustomerEntity entity: customerEntities) {
             customers.add(CustomerConversion.getCustomer(entity));
         }

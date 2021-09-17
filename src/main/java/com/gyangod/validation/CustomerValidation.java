@@ -20,9 +20,13 @@ public class CustomerValidation {
         validatePassword(customer.getPassword());
     }
 
-    public static void UpdateValidator(String oldUserName,CustomerEntity previousEntity,Customer customer, CustomerService service) throws Exception {
-        //todo: complete it
-//        validateNewEmail(customer.getEmailAddress(),service);
+    public static void UpdateValidator(CustomerEntity previousEntity,Customer customer, CustomerService service) throws Exception {
+        if(!customer.getUserName().equalsIgnoreCase(previousEntity.getUserName())){
+            validateNewUserName(customer.getUserName(),service);
+        }
+        if(!customer.getEmailAddress().equalsIgnoreCase(previousEntity.getEmailAddress())){
+            validateNewUserName(customer.getEmailAddress(),service);
+        }
         validateFirstName(customer.getFirstName());
     }
 
@@ -41,7 +45,7 @@ public class CustomerValidation {
         }
     }
 
-    private static void validatePassword(String password) throws BlankFieldException, RegexMatchException {
+    public static void validatePassword(String password) throws BlankFieldException, RegexMatchException {
             if(StringUtils.isNotBlank(password)){
                 if (!password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")) {
                     throw new RegexMatchException("Password must contains at least one digit, one upper case alphabet, one lower" +

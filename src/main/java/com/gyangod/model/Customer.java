@@ -23,6 +23,8 @@ public class Customer {
 
     private String[] authorities;
 
+    private String profilePic;
+
     private String jwtToken;
 
     public String getCustomerId() {
@@ -103,6 +105,14 @@ public class Customer {
 
     public void setAuthorities(String[] authorities) {
         this.authorities = authorities;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 
     public String getJwtToken() {
