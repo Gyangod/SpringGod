@@ -22,7 +22,7 @@ public interface CustomerService extends UserDetailsService {
 
     Customer updateUser(String currentUserName,Customer customer,String oldToken) throws Exception;
     //todo: make it by id
-    boolean deleteUser(Customer customer) throws Exception;
+    String deleteUser(String customerId) throws Exception;
 
     Customer updatePicture(String userName, MultipartFile profileImage, String jwtToken) throws Exception;
 
@@ -30,7 +30,7 @@ public interface CustomerService extends UserDetailsService {
 
     Customer updatePassword(String oldPassword, Customer customer, String jwtToken) throws Exception;
 
-    Customer resetPassword(Customer customer) throws Exception;
+    boolean resetPassword(Customer customer) throws Exception;
 
     List<Customer> getAllUsers(Integer pageNo, Integer pageSize, String sortBy, boolean ascending) throws Exception;
 

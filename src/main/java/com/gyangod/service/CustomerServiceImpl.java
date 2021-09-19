@@ -39,10 +39,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.gyangod.constants.FileConstant.*;
@@ -164,10 +161,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean deleteUser(Customer customer) throws Exception {
-        CustomerEntity entity = this.findByUserName(customer.getUserName());
-        customerRepository.delete(entity);
-        return true;
+    public String deleteUser(String customerId) throws Exception {
+        Optional<CustomerEntity> entity = customerRepository.findById(customerId);
+        String username;
+        if(entity.isEmpty()){
+            throw new UserNotFoundException();
+        }else{
+            username =  entity.get().getUserName();
+        }
+        entity.ifPresent(customerEntity -> customerRepository.delete(customerEntity));
+        return username;
     }
 
     @Override
@@ -200,16 +203,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer resetPassword(Customer customer) throws Exception {
+    public boolean resetPassword(Customer customer) throws Exception {
         CustomerEntity entity = this.findByEmailAddress(customer.getEmailAddress());
         if(!entity.getUserName().equals(customer.getUserName())) {
             throw new UnauthorizedException();
         }
         String password = randomPassword();
         entity.setPassword(passwordEncoder.encode(password));
-        customer = CustomerConversion.getCustomer(customerRepository.save(entity));
-        emailService.sendNewPasswordEmail(customer.getFirstName()+" "+customer.getLastName(),password,customer.getEmailAddress());
-        return customer;
+        customerRepository.save(entity);
+        emailService.sendNewPasswordEmail(entity.getFirstName()+" "+entity.getLastName(),password,entity.getEmailAddress());
+        return true;
     }
 
     @Override

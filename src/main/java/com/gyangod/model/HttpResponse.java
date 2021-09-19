@@ -21,6 +21,14 @@ public class HttpResponse {
         this.message = message;
     }
 
+    public HttpResponse(HttpStatus status,String reason, String message) {
+        this.timestamp = new Date();
+        this.statusCode = status.value();
+        this.status = status;
+        this.reason = reason.toUpperCase();
+        this.message = message;
+    }
+
     public Date getTimestamp() {
         return timestamp;
     }
