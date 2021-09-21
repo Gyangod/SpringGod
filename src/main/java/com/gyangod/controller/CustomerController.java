@@ -1,5 +1,6 @@
 package com.gyangod.controller;
 
+import com.gyangod.constants.CountryCodes;
 import com.gyangod.enums.statemachine.UserStatusEvents;
 import com.gyangod.exception.controller.UserExceptionHandling;
 import com.gyangod.model.Customer;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 import static com.gyangod.constants.FileConstant.FORWARD_SLASH;
 import static com.gyangod.constants.FileConstant.USER_FOLDER;
@@ -118,9 +120,9 @@ public class CustomerController extends UserExceptionHandling {
         return customerService.getTempFiles(username);
     }
 
-    @GetMapping(path = "/test")
-    public ResponseEntity<String> testEndToEnd() {
-        return new ResponseEntity<>("hello", OK);
+    @GetMapping(path = "/get/country/codes")
+    public ResponseEntity<Map<String,String>> testEndToEnd() {
+        return new ResponseEntity<>(CountryCodes.getNames(CountryCodes.class), OK);
     }
 
     private String changeUserNameToLowerCase(String userName) {
