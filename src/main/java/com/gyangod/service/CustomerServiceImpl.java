@@ -12,6 +12,7 @@ import com.gyangod.repository.CustomerRepository;
 import com.gyangod.utils.JWTTokenProvider;
 import com.gyangod.validation.CustomerValidation;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,11 +125,18 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer registerUser(Customer customer) throws Exception {
         CustomerEntity customerEntity = CustomerConversion.getCustomerEntity(customer);
         customerEntity.setPassword(passwordEncoder.encode(customer.getPassword()));
-        customerEntity.setRole(this.getUserRoleEnum(customer.getRole()));
+        if (StringUtils.isEmpty(customer.getRole())) {
+            customerEntity.setRole(UserRole.ROLE_STUDENT.name());
+        } else {
+            customerEntity.setRole(this.getUserRoleEnum(customer.getRole()));
+        }
         customerEntity.setAuthorities(UserRole.valueOf(customerEntity.getRole()).getAuthorities());
         customerEntity.setJoinDate();
-//        customerEntity.setImageLocation(saveProfileImage(customerEntity, profileImage));
-        return CustomerConversion.getCustomer(customerRepository.save(customerEntity));
+        CustomerEntity newEntity = customerRepository.save(customerEntity);
+        //giving jwt to new customer
+        Customer newCustomer = CustomerConversion.getCustomer(newEntity);
+        newCustomer.setJwtToken(jwtTokenProvider.generateJwtToken(new UserPrincipal(newEntity)));
+        return newCustomer;
     }
 
     @Override

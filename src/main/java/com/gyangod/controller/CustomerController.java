@@ -45,7 +45,9 @@ public class CustomerController extends UserExceptionHandling {
         CustomerValidation.ValidateCustomer(customer);
         customer.setUserName(changeUserNameToLowerCase(customer.getUserName()));
         CustomerValidation.RegisterValidator(customer,customerService);
-        return new ResponseEntity<>(customerService.registerUser(customer), OK);
+        Customer newCustomer = customerService.registerUser(customer);
+        HttpHeaders headers = getHttpHeaders(newCustomer);
+        return new ResponseEntity<>(newCustomer,headers, OK);
     }
 
     @PostMapping(value = "/login")
@@ -121,7 +123,7 @@ public class CustomerController extends UserExceptionHandling {
     }
 
     @GetMapping(path = "/get/country/codes")
-    public ResponseEntity<Map<String,String>> testEndToEnd() {
+    public ResponseEntity<Map<String,String>> getCountryCodes() {
         return new ResponseEntity<>(CountryCodes.getNames(CountryCodes.class), OK);
     }
 
@@ -129,10 +131,10 @@ public class CustomerController extends UserExceptionHandling {
         return userName.toLowerCase();
     }
 
-    private HttpHeaders getHttpHeaders(Customer customer1) {
+    private HttpHeaders getHttpHeaders(Customer customer) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(JWT_TOKEN_HEADER, customer1.getJwtToken());
-        customer1.setJwtToken(null);
+        headers.add(JWT_TOKEN_HEADER, customer.getJwtToken());
+        customer.setJwtToken(null);
         return headers;
     }
 }
