@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1",
+    "name": "Mathematics",
+    "topics": ["Trigonometry", "Sets", "Calculus"]
+  },
+  {
+    "id": "2",
+    "name": "Science",
+    "topics": ["Physics", "Chemistry", "Biology","Computer Science","Ecology"]
+  },
+  {
+    "id": "3",
+    "name": "Physics",
+    "topics": ["Quantum", "Classical", "Thermodynamics", "Kinematics",
+      "Work and Energy","Vectors"]
+  },
+  {
+    "id": "4",
+    "name": "Chemistry",
+    "topics": ["Organic", "Inorganic", "Reactions"]
+  },
+  {
+    "id": "5",
+    "name": "Biology",
+    "topics": ["Reproduction", "Epidemiology", "Genetic Engineering"]
+  },
+  {
+    "id": "6",
+    "name": "Geography"
+  },
+  {
+    "id": "7",
+    "name": "Computer Science",
+    "topics": ["IT", "Database", "Algorithms"]
+  }
+]

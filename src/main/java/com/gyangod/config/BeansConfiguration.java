@@ -3,7 +3,9 @@ package com.gyangod.config;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gyangod.entity.StandardsEntity;
+import com.gyangod.entity.SubjectsEntity;
 import com.gyangod.repository.StandardsRepository;
+import com.gyangod.repository.SubjectsRepository;
 import com.gyangod.utils.AddressConversion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +31,9 @@ public class BeansConfiguration {
 
     @Autowired
     private StandardsRepository standardsRepository;
+
+    @Autowired
+    private SubjectsRepository subjectsRepository;
 
     @Bean
     public AddressConversion getAddressConversion(){
@@ -65,13 +70,27 @@ public class BeansConfiguration {
     CommandLineRunner runner() {
         return args -> {
             ObjectMapper mapper = new ObjectMapper();
-            TypeReference<List<StandardsEntity>> typeReference = new TypeReference<>(){};
+            TypeReference<List<StandardsEntity>> standardTypeReference = new TypeReference<>(){};
             InputStream inputStream = TypeReference.class.getResourceAsStream("/json/standards.json");
             try{
-                List<StandardsEntity> entities = mapper.readValue(inputStream,typeReference);
+                List<StandardsEntity> entities = mapper.readValue(inputStream,standardTypeReference);
                 for (StandardsEntity entity : entities) {
                     standardsRepository.save(entity);
                 }
+                standardTypeReference = null;
+                entities = null;
+            }catch(Exception e){
+                LOG.error(e);
+            }
+            TypeReference<List<SubjectsEntity>> subjectTypeReference = new TypeReference<>(){};
+            inputStream = TypeReference.class.getResourceAsStream("/json/subjects.json");
+            try{
+                List<SubjectsEntity> entities = mapper.readValue(inputStream,subjectTypeReference);
+                for (SubjectsEntity entity : entities) {
+                    subjectsRepository.save(entity);
+                }
+                subjectTypeReference = null;
+                entities = null;
             }catch(Exception e){
                 LOG.error(e);
             }
