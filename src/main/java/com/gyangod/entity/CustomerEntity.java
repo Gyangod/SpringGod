@@ -31,7 +31,7 @@ public class CustomerEntity {
 
     private String lastName;
 
-    @Indexed(name = "customer_email",unique = true)
+    @Indexed(name = "customer_email",unique = true,sparse = true)
     @NotNull(message = "Email Id cannot be null")
     @Email(message = "The format of the email is not correct")
     private String emailAddress;

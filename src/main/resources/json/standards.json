@@ -1,0 +1,22 @@
+[
+    {
+        "id" : "1",
+        "cluster": "Primary",
+        "standards": ["I","II","III","IV","V"]
+    },
+    {
+        "id" : "2",
+        "cluster": "Secondary",
+        "standards": ["VI","VII","VIII","IX","X","OLYMPIAD"]
+    },
+    {
+        "id" : "3",
+        "cluster": "Higher Secondary",
+        "standards": ["XI","XII","JEE","NEET"]
+    },
+    {
+        "id" : "4",
+        "cluster": "University",
+        "standards": ["Engineer","Doctor","Bachelors","Post Grads"]
+    }
+]

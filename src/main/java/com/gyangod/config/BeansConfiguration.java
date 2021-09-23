@@ -1,6 +1,14 @@
 package com.gyangod.config;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gyangod.entity.StandardsEntity;
+import com.gyangod.repository.StandardsRepository;
 import com.gyangod.utils.AddressConversion;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
@@ -9,11 +17,19 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 public class BeansConfiguration {
+
+    private static final Log LOG = LogFactory.getLog(BeansConfiguration.class);
+
+    @Autowired
+    private StandardsRepository standardsRepository;
+
     @Bean
     public AddressConversion getAddressConversion(){
         return new AddressConversion();
@@ -43,6 +59,23 @@ public class BeansConfiguration {
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
+    }
+
+    @Bean
+    CommandLineRunner runner() {
+        return args -> {
+            ObjectMapper mapper = new ObjectMapper();
+            TypeReference<List<StandardsEntity>> typeReference = new TypeReference<>(){};
+            InputStream inputStream = TypeReference.class.getResourceAsStream("/json/standards.json");
+            try{
+                List<StandardsEntity> entities = mapper.readValue(inputStream,typeReference);
+                for (StandardsEntity entity : entities) {
+                    standardsRepository.save(entity);
+                }
+            }catch(Exception e){
+                LOG.error(e);
+            }
+        };
     }
 
 }
