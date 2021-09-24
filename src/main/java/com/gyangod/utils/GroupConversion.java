@@ -16,7 +16,7 @@ import java.util.List;
 
 public class GroupConversion {
 
-    public static GroupsEntity getGroupEntity(Group group){
+   /* public static GroupsEntity getGroupEntity(Group group){
         GroupsEntity entity = new GroupsEntity();
         if ((group.getGroupId() != null))   entity.set_id(group.getGroupId());
         if ((group.getGroupName() != null))   entity.setGroupName(group.getGroupName());
@@ -99,7 +99,7 @@ public class GroupConversion {
             return workingGroupsEntity;
         }
         return null;
-    }
+    }*/
 /*
     public static List<UserEntity> updateUserDetails(List<UserEntity> userEntities,UserEntity newUserEntity){
 

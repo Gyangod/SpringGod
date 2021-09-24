@@ -10,7 +10,7 @@ import java.util.List;
 public interface PackagesService {
 
     Pack testEndToEnd(Pack packages) throws Exception;
-    Pack savePackage(Pack pack, String userName, PackageState packageState) throws Exception;
+    Pack savePackage(Pack pack, String userName) throws Exception;
     List<PackagesEntity> getAllPackageNearMe(PackageSearch packageSearch) throws Exception;
     List<Pack> getAllPackages() throws Exception;
 }

@@ -1,6 +1,7 @@
 package com.gyangod.controller;
 
 import com.gyangod.enums.statemachine.PackageState;
+import com.gyangod.exception.controller.PackageExceptionHandling;
 import com.gyangod.model.Pack;
 import com.gyangod.model.PackageSearch;
 import com.gyangod.service.PackagesService;
@@ -12,26 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(value = "/api/pack")
-public class PackagesController {
+public class PackagesController extends PackageExceptionHandling {
 
     @Autowired
     private PackagesService packagesService;
 
-    @PostMapping(value = "/{userName}/save/{role}")
-    public ResponseEntity savePackageFromUser(@PathVariable(value = "userName") String userName,
-                                              @PathVariable(value = "role")String role,
-                                              @RequestBody Pack pack){
-        try{
-            PackageState state;
-            try{
-                 state = PackageState.valueOf(role.toUpperCase());
-            }catch (Exception e){
-                return new ResponseEntity("Please save as \"student\" or \"teacher\" only",HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-            return new ResponseEntity(packagesService.savePackage(pack,userName,state),HttpStatus.OK);
-        }catch (Exception e){
-            return  new ResponseEntity(e,HttpStatus.BAD_REQUEST);
-        }
+    @PostMapping(value = "/save/{userName}")
+    public ResponseEntity<Pack> savePackageFromUser(@PathVariable(value = "userName") String userName, @RequestBody Pack pack) throws Exception{
+        return new ResponseEntity<>(packagesService.savePackage(pack,userName),HttpStatus.OK);
     }
 
     @PostMapping(value = "/search")

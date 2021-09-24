@@ -6,6 +6,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
@@ -19,13 +20,18 @@ public class PackagesEntity {
 
     private List<String> standards;
 
-    @Indexed(name = "customer_packages")
+    private String name;
+
+    private String description;
+
+    @DBRef(db = "CUSTOMER")
     private String createdByUserId;
 
     private Double costPerUser;
 
     private Float discountRate;
 
+    //todo: not needed
     private Boolean visibility;
 
     private Integer occurrences;
@@ -34,6 +40,7 @@ public class PackagesEntity {
 
     private Boolean addressLock;
 
+    @DBRef(db = "ADDRESS")
     private String addressId;
 
     @GeoSpatialIndexed(name = "package_location",type = GeoSpatialIndexType.GEO_2DSPHERE)

@@ -40,14 +40,14 @@ public class PackagesServiceImpl implements PackagesService {
     }
 
     @Override
-    public Pack savePackage(Pack pack,String userName,PackageState packageState) throws Exception {
+    public Pack savePackage(Pack pack,String userName) throws Exception {
         try{
             CustomerEntity customerEntity = customerRepository.findByUserName(userName);
             PackagesEntity packagesEntity = PackagesConversion.getPackagesEntity(pack);
             packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
             Integer occurrences = packagesEntity.getOccurrencesList().size();
             packagesEntity.setOccurrences(occurrences);
-            Double totalSumOfHours = 0.0;
+            /*Double totalSumOfHours = 0.0;
             Integer sequence = 1;
             if(packagesEntity.getOccurrencesList()!=null) for (PackageOccurrences occurrence: packagesEntity.getOccurrencesList()) {
                 Double difference = Double.valueOf(((occurrence.getToTime().getTime() - occurrence.getFromTime().getTime())
@@ -58,10 +58,10 @@ public class PackagesServiceImpl implements PackagesService {
             } else{
                 throw  new Exception("Please give at least one occurrence of your package");
             }
-            packagesEntity.setTotalWorkingHours(totalSumOfHours);
-            packagesEntity.setPackageStatus(packageState);
-            packagesEntity = packagesRepository.save(packagesEntity);
-            return PackagesConversion.getPackages(packagesEntity);
+            packagesEntity.setTotalWorkingHours(totalSumOfHours);*/
+            packagesEntity.setPackageStatus(PackageState.ACTIVE);
+            PackagesEntity newPackagesEntity = packagesRepository.save(packagesEntity);
+            return PackagesConversion.getPackages(newPackagesEntity);
         }catch (Exception e){
             e.printStackTrace();
             throw e;

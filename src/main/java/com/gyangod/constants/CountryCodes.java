@@ -12,7 +12,7 @@ public enum CountryCodes {
     United_States("+1"),
     United_Kingdom("+44");
 
-    private String code;
+    private final String code;
 
     CountryCodes(String code) {
         this.code = code;

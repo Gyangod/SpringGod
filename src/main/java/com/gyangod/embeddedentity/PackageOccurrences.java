@@ -1,46 +1,66 @@
 package com.gyangod.embeddedentity;
 
-import java.util.Date;
+import com.gyangod.constants.DaysInWeek;
 
 public class PackageOccurrences {
 
-    private Date fromTime;
+    private String fromTime;
 
-    private Date toTime;
+    private String toTime;
 
-    private Double workingHours;
+    private Double timeDifference;
 
-    private Integer sequence;
+    private Boolean isActive = true;
 
-    public Date getFromTime() {
+    private Boolean repeatable = true;
+
+    private String day;
+
+    public String getFromTime() {
         return fromTime;
     }
 
-    public void setFromTime(Date fromTime) {
+    public void setFromTime(String fromTime) {
         this.fromTime = fromTime;
     }
 
-    public Date getToTime() {
+    public String getToTime() {
         return toTime;
     }
 
-    public void setToTime(Date toTime) {
+    public void setToTime(String toTime) {
         this.toTime = toTime;
     }
 
-    public Double getWorkingHours() {
-        return workingHours;
+    public Double getTimeDifference() {
+        return timeDifference;
     }
 
-    public void setWorkingHours(Double workingHours) {
-        this.workingHours = workingHours;
+    public void setTimeDifference(Double timeDifference) {
+        this.timeDifference = timeDifference;
     }
 
-    public Integer getSequence() {
-        return sequence;
+    public Boolean getActive() {
+        return isActive;
     }
 
-    public void setSequence(Integer sequence) {
-        this.sequence = sequence;
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public Boolean getRepeatable() {
+        return repeatable;
+    }
+
+    public void setRepeatable(Boolean repeatable) {
+        this.repeatable = repeatable;
+    }
+
+    public DaysInWeek getDay() {
+        return DaysInWeek.valueOf(day);
+    }
+
+    public void setDay(DaysInWeek day) {
+        this.day = day.name();
     }
 }
