@@ -35,10 +35,6 @@ public class BeansConfiguration {
     @Autowired
     private SubjectsRepository subjectsRepository;
 
-    @Bean
-    public AddressConversion getAddressConversion(){
-        return new AddressConversion();
-    }
 
     @Bean
     public ValidatingMongoEventListener validatingMongoEventListener() {

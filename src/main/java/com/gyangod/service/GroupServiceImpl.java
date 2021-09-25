@@ -34,14 +34,15 @@ public class GroupServiceImpl implements GroupService {
             Optional<PackagesEntity> packagesEntity = packagesRepository.findById(group.getPackageId());
             PackagesEntity packageEntity;
             packagesEntity.ifPresent((Consumer<PackagesEntity>) (packageEntity = packagesEntity.get()));
-            GroupsEntity returnGroupsEntity = fillNewGroupDetails(customerEntity,packageEntity,group);
-            return GroupConversion.getGroup(groupRepository.save(returnGroupsEntity));
+//            GroupsEntity returnGroupsEntity = fillNewGroupDetails(customerEntity,packageEntity,group);
+//            return GroupConversion.getGroup(groupRepository.save(returnGroupsEntity));
         }catch (Exception e){
             throw e;
         }
+        return null;
     }
 
-    private GroupsEntity fillNewGroupDetails(CustomerEntity customerEntity, PackagesEntity packagesEntity,Group group) throws Exception {
+    /*private GroupsEntity fillNewGroupDetails(CustomerEntity customerEntity, PackagesEntity packagesEntity,Group group) throws Exception {
         GroupsEntity groupsEntity;
         Boolean newFlag = false;
         if(group.getPackageId()!=null){
@@ -62,5 +63,5 @@ public class GroupServiceImpl implements GroupService {
         groupsEntity = GroupConversion.fillUserDetails(groupsEntity,customerEntity,packagesEntity.getPackageStatus(),false);
         groupsEntity.setGroupLastUpdatedByUserName(customerEntity.getUserName());
         return groupsEntity;
-    }
+    }*/
 }

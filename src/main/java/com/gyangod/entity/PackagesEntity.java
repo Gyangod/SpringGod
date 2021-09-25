@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Document(collection = "PACKAGES")
@@ -27,31 +28,48 @@ public class PackagesEntity {
     @DBRef(db = "CUSTOMER")
     private String createdByUserId;
 
-    private Double costPerUser;
+    @DBRef(db = "CUSTOMER")
+    private String teacherId;
 
-    private Float discountRate;
+    @NotNull //imp
+    private Double costPerHour = 0.0;
 
-    //todo: not needed
-    private Boolean visibility;
+    private Double monthlyDiscount;
 
     private Integer occurrences;
 
-    private Double totalWorkingHours;
+    @NotNull
+    private Double weeklyCost = 0.0;
 
-    private Boolean addressLock;
+    @NotNull //imp
+    private Double totalWeekHours = 0.0;
+
+    @NotNull
+    private Double totalMonthHours = 0.0;
+
+    @NotNull
+    private Double monthlyCost = 0.0;
+
+    @NotNull
+    private Boolean addressLock = false;
 
     @DBRef(db = "ADDRESS")
     private String addressId;
+
+    private String addressPlaceName;
 
     @GeoSpatialIndexed(name = "package_location",type = GeoSpatialIndexType.GEO_2DSPHERE)
     private Point location;
 
     private List<PackageOccurrences> occurrencesList;
 
+    @Indexed(sparse = true)
     private List<String> subjects;
 
+    @Indexed(sparse = true)
     private List<String> topics;
 
+    @Indexed(sparse = true)
     private String packageStatus;
 
     public String getPackageId() {
@@ -70,6 +88,22 @@ public class PackagesEntity {
         this.standards = standards;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getCreatedByUserId() {
         return createdByUserId;
     }
@@ -78,28 +112,28 @@ public class PackagesEntity {
         this.createdByUserId = createdByUserId;
     }
 
-    public Double getCostPerUser() {
-        return costPerUser;
+    public String getTeacherId() {
+        return teacherId;
     }
 
-    public void setCostPerUser(Double costPerUser) {
-        this.costPerUser = costPerUser;
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
     }
 
-    public Float getDiscountRate() {
-        return discountRate;
+    public Double getCostPerHour() {
+        return costPerHour;
     }
 
-    public void setDiscountRate(Float discountRate) {
-        this.discountRate = discountRate;
+    public void setCostPerHour(Double costPerHour) {
+        this.costPerHour = costPerHour;
     }
 
-    public Boolean getVisibility() {
-        return visibility;
+    public Double getMonthlyDiscount() {
+        return monthlyDiscount;
     }
 
-    public void setVisibility(Boolean visibility) {
-        this.visibility = visibility;
+    public void setMonthlyDiscount(Double monthlyDiscount) {
+        this.monthlyDiscount = monthlyDiscount;
     }
 
     public Integer getOccurrences() {
@@ -110,12 +144,36 @@ public class PackagesEntity {
         this.occurrences = occurrences;
     }
 
-    public Double getTotalWorkingHours() {
-        return totalWorkingHours;
+    public Double getWeeklyCost() {
+        return weeklyCost;
     }
 
-    public void setTotalWorkingHours(Double totalWorkingHours) {
-        this.totalWorkingHours = totalWorkingHours;
+    public void setWeeklyCost(Double weeklyCost) {
+        this.weeklyCost = weeklyCost;
+    }
+
+    public Double getTotalWeekHours() {
+        return totalWeekHours;
+    }
+
+    public void setTotalWeekHours(Double totalWeekHours) {
+        this.totalWeekHours = totalWeekHours;
+    }
+
+    public Double getTotalMonthHours() {
+        return totalMonthHours;
+    }
+
+    public void setTotalMonthHours(Double totalMonthHours) {
+        this.totalMonthHours = totalMonthHours;
+    }
+
+    public Double getMonthlyCost() {
+        return monthlyCost;
+    }
+
+    public void setMonthlyCost(Double monthlyCost) {
+        this.monthlyCost = monthlyCost;
     }
 
     public Boolean getAddressLock() {
@@ -132,6 +190,14 @@ public class PackagesEntity {
 
     public void setAddressId(String addressId) {
         this.addressId = addressId;
+    }
+
+    public String getAddressPlaceName() {
+        return addressPlaceName;
+    }
+
+    public void setAddressPlaceName(String addressPlaceName) {
+        this.addressPlaceName = addressPlaceName;
     }
 
     public Point getLocation() {

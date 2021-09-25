@@ -12,6 +12,8 @@ import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
 import static com.gyangod.constants.StateMachineConstant.PACKAGE_STATE_MACHINE_HEADER;
+import static com.gyangod.enums.statemachine.PackageEvents.*;
+import static com.gyangod.enums.statemachine.PackageState.*;
 
 @Configuration
 @EnableStateMachineFactory(name = "package")
@@ -30,26 +32,23 @@ public class PackageStateMachine extends StateMachineConfigurerAdapter<PackageSt
 
     @Override
     public void configure(StateMachineStateConfigurer<PackageState, PackageEvents> states) throws Exception {
-        states.withStates().initial(PackageState.ACTIVE).stateEntry(PackageState.ACTIVE, stateContext -> {
+        states.withStates().initial(ACTIVE).stateEntry(ACTIVE, stateContext -> {
             stateContext.getExtendedState().getVariables().getOrDefault(PACKAGE_STATE_MACHINE_HEADER, "default");
             //TODO: Log this activity
-        }).state(PackageState.INACTIVE).state(PackageState.STUDENT).state(PackageState.TEACHER)
-                .end(PackageState.DEPRECIATE);
+        }).state(STUDENT).state(INVISIBLE).end(INACTIVE);
     }
 
     @Override
     public void configure(StateMachineTransitionConfigurer<PackageState, PackageEvents> transitions) throws Exception {
         transitions
-                .withExternal().source(PackageState.ACTIVE).target(PackageState.STUDENT).event(PackageEvents.student).and()
-                .withExternal().source(PackageState.ACTIVE).target(PackageState.TEACHER).event(PackageEvents.teacher).and()
-//                .withExternal().source(PackageState.STUDENT).target(PackageState.TEACHER).event(PackageEvents.change).and()
-//                .withExternal().source(PackageState.TEACHER).target(PackageState.STUDENT).event(PackageEvents.change).and()
-                .withExternal().source(PackageState.STUDENT).target(PackageState.INACTIVE).event(PackageEvents.deactivate).and()
-                .withExternal().source(PackageState.TEACHER).target(PackageState.INACTIVE).event(PackageEvents.deactivate).and()
-                .withExternal().source(PackageState.INACTIVE).target(PackageState.STUDENT).event(PackageEvents.student).and()
-                .withExternal().source(PackageState.INACTIVE).target(PackageState.TEACHER).event(PackageEvents.teacher).and()
-                .withExternal().source(PackageState.STUDENT).target(PackageState.DEPRECIATE).event(PackageEvents.destroy).and()
-                .withExternal().source(PackageState.TEACHER).target(PackageState.DEPRECIATE).event(PackageEvents.destroy).and()
-                .withExternal().source(PackageState.INACTIVE).target(PackageState.DEPRECIATE).event(PackageEvents.destroy);
+                //making a package active
+                .withExternal().source(STUDENT).target(ACTIVE).event(activate).and()
+                .withExternal().source(INACTIVE).target(ACTIVE).event(activate).and()
+                //toggling a package visibility
+                .withExternal().source(ACTIVE).target(INVISIBLE).event(change).and()
+                .withExternal().source(INVISIBLE).target(ACTIVE).event(change).and()
+                //making a package inactive
+                .withExternal().source(ACTIVE).target(INACTIVE).event(deactivate).and()
+                .withExternal().source(INVISIBLE).target(INACTIVE).event(deactivate);
     }
 }

@@ -7,7 +7,6 @@ public enum UserRole {
     ROLE_STUDENT(STUDENT),
     ROLE_TEACHER(TEACHER),
     ROLE_OPERATOR(ADMIN),
-//    ROLE_ADMIN(ADMIN_AUTHORITIES),
     ROLE_ADMIN(SUPER_ADMIN);
 
     private String[] authorities;

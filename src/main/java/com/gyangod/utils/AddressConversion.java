@@ -4,7 +4,9 @@ import com.gyangod.entity.AddressEntity;
 import com.gyangod.entity.CustomerEntity;
 import com.gyangod.model.Address;
 import com.gyangod.model.CustomerAddress;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AddressConversion {
 
     public AddressEntity getAddressEntity(Address entity) throws Exception{

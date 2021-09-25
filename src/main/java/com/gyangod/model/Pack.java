@@ -11,6 +11,36 @@ public class Pack {
 
     private List<String> standards;
 
+    private String name;
+
+    private String description;
+
+    private Customer createdBy;
+
+    private Customer teacher;
+
+    private Double costPerHour;
+
+    private Double monthlyDiscount;
+
+    private Integer occurrences;
+
+    private Double weeklyCost;
+
+    private Double totalWeekHours;
+
+    private Double totalMonthHours;
+
+    private Double monthlyCost;
+
+    private Boolean addressLock;
+
+    private Address address;
+
+    private String addressPlaceName;
+
+    private Point location;
+
     private List<PackageOccurrences> occurrencesList;
 
     private List<String> subjects;
@@ -19,15 +49,7 @@ public class Pack {
 
     private Boolean visibility;
 
-    private Boolean addressLock;
-
-    private Double costPerUser;
-
-    private String addressId;
-
-    private Point location;
-
-    private String packageStatus;
+    private Boolean isActive;
 
     public String getPackageId() {
         return packageId;
@@ -43,6 +65,126 @@ public class Pack {
 
     public void setStandards(List<String> standards) {
         this.standards = standards;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Customer getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Customer createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Customer getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Customer teacher) {
+        this.teacher = teacher;
+    }
+
+    public Double getCostPerHour() {
+        return costPerHour;
+    }
+
+    public void setCostPerHour(Double costPerHour) {
+        this.costPerHour = costPerHour;
+    }
+
+    public Double getMonthlyDiscount() {
+        return monthlyDiscount;
+    }
+
+    public void setMonthlyDiscount(Double monthlyDiscount) {
+        this.monthlyDiscount = monthlyDiscount;
+    }
+
+    public Integer getOccurrences() {
+        return occurrences;
+    }
+
+    public void setOccurrences(Integer occurrences) {
+        this.occurrences = occurrences;
+    }
+
+    public Double getWeeklyCost() {
+        return weeklyCost;
+    }
+
+    public void setWeeklyCost(Double weeklyCost) {
+        this.weeklyCost = weeklyCost;
+    }
+
+    public Double getTotalWeekHours() {
+        return totalWeekHours;
+    }
+
+    public void setTotalWeekHours(Double totalWeekHours) {
+        this.totalWeekHours = totalWeekHours;
+    }
+
+    public Double getTotalMonthHours() {
+        return totalMonthHours;
+    }
+
+    public void setTotalMonthHours(Double totalMonthHours) {
+        this.totalMonthHours = totalMonthHours;
+    }
+
+    public Double getMonthlyCost() {
+        return monthlyCost;
+    }
+
+    public void setMonthlyCost(Double monthlyCost) {
+        this.monthlyCost = monthlyCost;
+    }
+
+    public Boolean getAddressLock() {
+        return addressLock;
+    }
+
+    public void setAddressLock(Boolean addressLock) {
+        this.addressLock = addressLock;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getAddressPlaceName() {
+        return addressPlaceName;
+    }
+
+    public void setAddressPlaceName(String addressPlaceName) {
+        this.addressPlaceName = addressPlaceName;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
     public List<PackageOccurrences> getOccurrencesList() {
@@ -77,43 +219,11 @@ public class Pack {
         this.visibility = visibility;
     }
 
-    public Boolean getAddressLock() {
-        return addressLock;
+    public Boolean getActive() {
+        return isActive;
     }
 
-    public void setAddressLock(Boolean addressLock) {
-        this.addressLock = addressLock;
-    }
-
-    public Double getCostPerUser() {
-        return costPerUser;
-    }
-
-    public void setCostPerUser(Double costPerUser) {
-        this.costPerUser = costPerUser;
-    }
-
-    public String getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(String addressId) {
-        this.addressId = addressId;
-    }
-
-    public Point getLocation() {
-        return location;
-    }
-
-    public void setLocation(Point location) {
-        this.location = location;
-    }
-
-    public String getPackageStatus() {
-        return packageStatus;
-    }
-
-    public void setPackageStatus(String packageStatus) {
-        this.packageStatus = packageStatus;
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }
