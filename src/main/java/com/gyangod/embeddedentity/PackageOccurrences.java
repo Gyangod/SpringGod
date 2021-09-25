@@ -16,6 +16,17 @@ public class PackageOccurrences {
 
     private String day;
 
+    public PackageOccurrences(){}
+
+    public PackageOccurrences(String fromTime, String toTime, Double timeDifference, Boolean isActive, Boolean repeatable, String day) {
+        this.fromTime = fromTime;
+        this.toTime = toTime;
+        this.timeDifference = timeDifference;
+        this.isActive = isActive;
+        this.repeatable = repeatable;
+        this.day = day;
+    }
+
     public String getFromTime() {
         return fromTime;
     }

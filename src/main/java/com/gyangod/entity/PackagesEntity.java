@@ -6,10 +6,10 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -25,10 +25,10 @@ public class PackagesEntity {
 
     private String description;
 
-    @DBRef(db = "CUSTOMER")
+    @OneToOne(targetEntity = CustomerEntity.class)
     private String createdByUserId;
 
-    @DBRef(db = "CUSTOMER")
+    @OneToOne(targetEntity = CustomerEntity.class)
     private String teacherId;
 
     @NotNull //imp
@@ -53,7 +53,7 @@ public class PackagesEntity {
     @NotNull
     private Boolean addressLock = false;
 
-    @DBRef(db = "ADDRESS")
+    @OneToOne(targetEntity = AddressEntity.class)
     private String addressId;
 
     private String addressPlaceName;

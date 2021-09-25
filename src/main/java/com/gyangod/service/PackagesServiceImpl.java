@@ -43,7 +43,7 @@ public class PackagesServiceImpl implements PackagesService {
         try{
             CustomerEntity customerEntity = customerRepository.findByUserName(userName);
             PackagesEntity packagesEntity = packagesConversion.getPackagesEntity(pack);
-            packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
+//            packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
             fillUpPackageAmountDetails(packagesEntity);
             packagesEntity.setPackageStatus(getPackageStatusFromRole(customerEntity.getRole()));
             PackagesEntity newPackagesEntity = packagesRepository.save(packagesEntity);
@@ -58,7 +58,7 @@ public class PackagesServiceImpl implements PackagesService {
     public Pack teachPackage(Pack pack, String userName) throws Exception {
         CustomerEntity customerEntity = customerRepository.findByUserName(userName);
         PackagesEntity packagesEntity = packagesConversion.getPackagesEntity(pack);
-        packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
+//        packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
         packagesEntity.setTeacherId(customerEntity.getCustomerId());
         fillUpPackageAmountDetails(packagesEntity);
         packagesEntity.setPackageStatus(ACTIVE);
