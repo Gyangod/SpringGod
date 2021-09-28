@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static com.gyangod.enums.UserRole.ROLE_STUDENT;
 import static com.gyangod.enums.statemachine.PackageState.*;
@@ -43,7 +44,7 @@ public class PackagesServiceImpl implements PackagesService {
         try{
             CustomerEntity customerEntity = customerRepository.findByUserName(userName);
             PackagesEntity packagesEntity = packagesConversion.getPackagesEntity(pack);
-//            packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
+            packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
             fillUpPackageAmountDetails(packagesEntity);
             packagesEntity.setPackageStatus(getPackageStatusFromRole(customerEntity.getRole()));
             PackagesEntity newPackagesEntity = packagesRepository.save(packagesEntity);
@@ -58,7 +59,8 @@ public class PackagesServiceImpl implements PackagesService {
     public Pack teachPackage(Pack pack, String userName) throws Exception {
         CustomerEntity customerEntity = customerRepository.findByUserName(userName);
         PackagesEntity packagesEntity = packagesConversion.getPackagesEntity(pack);
-//        packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
+        packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
+        packagesEntity.setTeacherName(customerEntity.getFirstName()+" "+customerEntity.getLastName());
         packagesEntity.setTeacherId(customerEntity.getCustomerId());
         fillUpPackageAmountDetails(packagesEntity);
         packagesEntity.setPackageStatus(ACTIVE);
@@ -103,28 +105,32 @@ public class PackagesServiceImpl implements PackagesService {
         }
     }
     private void fillUpPackageAmountDetails(PackagesEntity packagesEntity) throws BlankFieldException, ParseException {
-        if(packagesEntity.getOccurrencesList() != null && packagesEntity.getOccurrencesList().size() == 0) {
-            Integer occurrences = packagesEntity.getOccurrencesList().size();
-            packagesEntity.setOccurrences(occurrences);
-            double weekDiff = 0.0;
-            for (PackageOccurrences occurrence: packagesEntity.getOccurrencesList()) {
-                SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-                Date from = format.parse(occurrence.getFromTime());
-                Date to = format.parse(occurrence.getToTime());
-                double diff = (double) (from.getTime() - to.getTime());
-                occurrence.setTimeDifference(diff);
-                weekDiff += diff;
+        if(packagesEntity.getFixedCourse() && (packagesEntity.getMapOccurrences() == null || packagesEntity.getMapOccurrences().size() == 0)){
+            throw new BlankFieldException("Batch");
+        }
+        if(packagesEntity.getMapOccurrences() != null && packagesEntity.getMapOccurrences().size() > 0) {
+            for (List<PackageOccurrences> packages: packagesEntity.getMapOccurrences().values()) {
+                if(packages!=null && packages.size() > 0) {
+                    double weekDiff = 0.0;
+                    for (PackageOccurrences occurrence : packages) {
+                        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+                        Date from = format.parse(occurrence.getFromTime());
+                        Date to = format.parse(occurrence.getToTime());
+                        double diff = (double) (from.getTime() - to.getTime());
+                        occurrence.setTimeDifference(diff);
+                        weekDiff += diff;
+                    }
+                    packagesEntity.setTotalMonthHours(weekDiff * 4);
+                    packagesEntity.setTotalWeekHours(weekDiff);
+                }
             }
-            packagesEntity.setTotalMonthHours(weekDiff * 4);
-            packagesEntity.setTotalWeekHours(weekDiff);
+        }
+        if(packagesEntity.getTotalWeekHours() <= 0.0 && packagesEntity.getTotalMonthHours() <= 0.0){
+            throw new BlankFieldException("Time");
+        } else if(packagesEntity.getTotalWeekHours() > 0.0){
+            packagesEntity.setTotalMonthHours(packagesEntity.getTotalWeekHours() * 4);
         } else {
-            if(packagesEntity.getTotalWeekHours() <= 0.0 && packagesEntity.getTotalMonthHours() <= 0.0){
-                throw new BlankFieldException("Total Hours");
-            } else if(packagesEntity.getTotalWeekHours() > 0.0){
-                packagesEntity.setTotalMonthHours(packagesEntity.getTotalWeekHours() * 4);
-            } else {
-                packagesEntity.setTotalWeekHours(packagesEntity.getTotalMonthHours() / 4);
-            }
+            packagesEntity.setTotalWeekHours(packagesEntity.getTotalMonthHours() / 4);
         }
         if(packagesEntity.getCostPerHour() > 0.0) {
             packagesEntity.setWeeklyCost(packagesEntity.getCostPerHour() * packagesEntity.getTotalWeekHours());
@@ -136,7 +142,7 @@ public class PackagesServiceImpl implements PackagesService {
             packagesEntity.setWeeklyCost(packagesEntity.getMonthlyCost() / 4);
             packagesEntity.setCostPerHour(packagesEntity.getMonthlyCost() / packagesEntity.getTotalMonthHours());
         } else {
-            throw new BlankFieldException("cost");
+            throw new BlankFieldException("Cost");
         }
     }
 }

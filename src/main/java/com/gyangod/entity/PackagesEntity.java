@@ -11,7 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Document(collection = "PACKAGES")
 public class PackagesEntity {
@@ -25,18 +27,23 @@ public class PackagesEntity {
 
     private String description;
 
+    private Date courseEndDate;
+
     @OneToOne(targetEntity = CustomerEntity.class)
     private String createdByUserId;
 
     @OneToOne(targetEntity = CustomerEntity.class)
     private String teacherId;
 
+    private String teacherName;
+
+    @NotNull
+    private Boolean addOtherMembers = true;
+
     @NotNull //imp
     private Double costPerHour = 0.0;
 
     private Double monthlyDiscount;
-
-    private Integer occurrences;
 
     @NotNull
     private Double weeklyCost = 0.0;
@@ -50,18 +57,15 @@ public class PackagesEntity {
     @NotNull
     private Double monthlyCost = 0.0;
 
+    private Double courseDuration;
+
     @NotNull
-    private Boolean addressLock = false;
-
-    @OneToOne(targetEntity = AddressEntity.class)
-    private String addressId;
-
-    private String addressPlaceName;
+    private Boolean fixedCourse = false;
 
     @GeoSpatialIndexed(name = "package_location",type = GeoSpatialIndexType.GEO_2DSPHERE)
     private Point location;
 
-    private List<PackageOccurrences> occurrencesList;
+    private Map<String,List<PackageOccurrences>> mapOccurrences;
 
     @Indexed(sparse = true)
     private List<String> subjects;
@@ -104,6 +108,14 @@ public class PackagesEntity {
         this.description = description;
     }
 
+    public Date getCourseEndDate() {
+        return courseEndDate;
+    }
+
+    public void setCourseEndDate(Date courseEndDate) {
+        this.courseEndDate = courseEndDate;
+    }
+
     public String getCreatedByUserId() {
         return createdByUserId;
     }
@@ -120,6 +132,22 @@ public class PackagesEntity {
         this.teacherId = teacherId;
     }
 
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public Boolean getAddOtherMembers() {
+        return addOtherMembers;
+    }
+
+    public void setAddOtherMembers(Boolean addOtherMembers) {
+        this.addOtherMembers = addOtherMembers;
+    }
+
     public Double getCostPerHour() {
         return costPerHour;
     }
@@ -134,14 +162,6 @@ public class PackagesEntity {
 
     public void setMonthlyDiscount(Double monthlyDiscount) {
         this.monthlyDiscount = monthlyDiscount;
-    }
-
-    public Integer getOccurrences() {
-        return occurrences;
-    }
-
-    public void setOccurrences(Integer occurrences) {
-        this.occurrences = occurrences;
     }
 
     public Double getWeeklyCost() {
@@ -176,28 +196,20 @@ public class PackagesEntity {
         this.monthlyCost = monthlyCost;
     }
 
-    public Boolean getAddressLock() {
-        return addressLock;
+    public Double getCourseDuration() {
+        return courseDuration;
     }
 
-    public void setAddressLock(Boolean addressLock) {
-        this.addressLock = addressLock;
+    public void setCourseDuration(Double courseDuration) {
+        this.courseDuration = courseDuration;
     }
 
-    public String getAddressId() {
-        return addressId;
+    public Boolean getFixedCourse() {
+        return fixedCourse;
     }
 
-    public void setAddressId(String addressId) {
-        this.addressId = addressId;
-    }
-
-    public String getAddressPlaceName() {
-        return addressPlaceName;
-    }
-
-    public void setAddressPlaceName(String addressPlaceName) {
-        this.addressPlaceName = addressPlaceName;
+    public void setFixedCourse(Boolean fixedCourse) {
+        this.fixedCourse = fixedCourse;
     }
 
     public Point getLocation() {
@@ -208,12 +220,12 @@ public class PackagesEntity {
         this.location = location;
     }
 
-    public List<PackageOccurrences> getOccurrencesList() {
-        return occurrencesList;
+    public Map<String, List<PackageOccurrences>> getMapOccurrences() {
+        return mapOccurrences;
     }
 
-    public void setOccurrencesList(List<PackageOccurrences> occurrencesList) {
-        this.occurrencesList = occurrencesList;
+    public void setMapOccurrences(Map<String, List<PackageOccurrences>> mapOccurrences) {
+        this.mapOccurrences = mapOccurrences;
     }
 
     public List<String> getSubjects() {

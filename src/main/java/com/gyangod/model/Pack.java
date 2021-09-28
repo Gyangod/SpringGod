@@ -3,7 +3,9 @@ package com.gyangod.model;
 import com.gyangod.embeddedentity.PackageOccurrences;
 import org.springframework.data.geo.Point;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class Pack {
 
@@ -15,15 +17,19 @@ public class Pack {
 
     private String description;
 
+    private Date courseEndDate;
+
     private Customer createdBy;
 
     private Customer teacher;
 
+    private String teacherName;
+
+    private Boolean addOtherMembers;
+
     private Double costPerHour;
 
     private Double monthlyDiscount;
-
-    private Integer occurrences;
 
     private Double weeklyCost;
 
@@ -33,18 +39,17 @@ public class Pack {
 
     private Double monthlyCost;
 
-    private Boolean addressLock;
+    private Double courseDuration;
 
-    private Address address;
-
-    private String addressPlaceName;
+    private Boolean fixedCourse;
 
     private Point location;
 
-    private List<PackageOccurrences> occurrencesList;
+    private Map<String,List<PackageOccurrences>> mapOccurrences;
 
     private List<String> subjects;
 
+    //is it necessary?
     private List<String> topics;
 
     private Boolean visibility;
@@ -83,6 +88,14 @@ public class Pack {
         this.description = description;
     }
 
+    public Date getCourseEndDate() {
+        return courseEndDate;
+    }
+
+    public void setCourseEndDate(Date courseEndDate) {
+        this.courseEndDate = courseEndDate;
+    }
+
     public Customer getCreatedBy() {
         return createdBy;
     }
@@ -99,6 +112,22 @@ public class Pack {
         this.teacher = teacher;
     }
 
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public Boolean getAddOtherMembers() {
+        return addOtherMembers;
+    }
+
+    public void setAddOtherMembers(Boolean addOtherMembers) {
+        this.addOtherMembers = addOtherMembers;
+    }
+
     public Double getCostPerHour() {
         return costPerHour;
     }
@@ -113,14 +142,6 @@ public class Pack {
 
     public void setMonthlyDiscount(Double monthlyDiscount) {
         this.monthlyDiscount = monthlyDiscount;
-    }
-
-    public Integer getOccurrences() {
-        return occurrences;
-    }
-
-    public void setOccurrences(Integer occurrences) {
-        this.occurrences = occurrences;
     }
 
     public Double getWeeklyCost() {
@@ -155,28 +176,20 @@ public class Pack {
         this.monthlyCost = monthlyCost;
     }
 
-    public Boolean getAddressLock() {
-        return addressLock;
+    public Double getCourseDuration() {
+        return courseDuration;
     }
 
-    public void setAddressLock(Boolean addressLock) {
-        this.addressLock = addressLock;
+    public void setCourseDuration(Double courseDuration) {
+        this.courseDuration = courseDuration;
     }
 
-    public Address getAddress() {
-        return address;
+    public Boolean getFixedCourse() {
+        return fixedCourse;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public String getAddressPlaceName() {
-        return addressPlaceName;
-    }
-
-    public void setAddressPlaceName(String addressPlaceName) {
-        this.addressPlaceName = addressPlaceName;
+    public void setFixedCourse(Boolean fixedCourse) {
+        this.fixedCourse = fixedCourse;
     }
 
     public Point getLocation() {
@@ -187,12 +200,12 @@ public class Pack {
         this.location = location;
     }
 
-    public List<PackageOccurrences> getOccurrencesList() {
-        return occurrencesList;
+    public Map<String, List<PackageOccurrences>> getMapOccurrences() {
+        return mapOccurrences;
     }
 
-    public void setOccurrencesList(List<PackageOccurrences> occurrencesList) {
-        this.occurrencesList = occurrencesList;
+    public void setMapOccurrences(Map<String, List<PackageOccurrences>> mapOccurrences) {
+        this.mapOccurrences = mapOccurrences;
     }
 
     public List<String> getSubjects() {
