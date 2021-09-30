@@ -34,6 +34,7 @@ public class PackagesConversion {
             entity.setTeacherId(packages.getTeacher().getCustomerId());
         }
         entity.setTeacherName(packages.getTeacherName());
+        entity.setAddOtherMembers(packages.getAddOtherMembers());
         entity.setCostPerHour(packages.getCostPerHour());
         entity.setMonthlyDiscount(packages.getMonthlyDiscount());
         entity.setWeeklyCost(packages.getWeeklyCost());
@@ -96,6 +97,7 @@ public class PackagesConversion {
         entity.setDescription(packages.getDescription());
         entity.setCourseEndDate(packages.getCourseEndDate());
         entity.setTeacherName(packages.getTeacherName());
+        entity.setAddOtherMembers(packages.getAddOtherMembers());
         entity.setCostPerHour(packages.getCostPerHour());
         entity.setMonthlyDiscount(packages.getMonthlyDiscount());
         entity.setWeeklyCost(packages.getWeeklyCost());
