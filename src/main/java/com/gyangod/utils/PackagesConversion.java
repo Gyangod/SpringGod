@@ -34,9 +34,10 @@ public class PackagesConversion {
             entity.setTeacherId(packages.getTeacher().getCustomerId());
         }
         entity.setTeacherName(packages.getTeacherName());
-        entity.setAddOtherMembers(packages.getAddOtherMembers());
+        entity.setAnyoneCanAddBatch(packages.getAnyoneCanAddBatch());
+        entity.setRefundable(packages.getRefundable());
         entity.setCostPerHour(packages.getCostPerHour());
-        entity.setMonthlyDiscount(packages.getMonthlyDiscount());
+        entity.setCourseDiscount(packages.getCourseDiscount());
         entity.setWeeklyCost(packages.getWeeklyCost());
         entity.setTotalWeekHours(packages.getTotalWeekHours());
         entity.setTotalMonthHours(packages.getTotalMonthHours());
@@ -46,13 +47,6 @@ public class PackagesConversion {
         entity.setLocation(packages.getLocation());
         entity.setMapOccurrences(packages.getMapOccurrences());
         entity.setSubjects(packages.getSubjects());
-        if(packages.getSubjects() != null) {
-            List<String> topics = new ArrayList<>();
-            for (String subject : packages.getSubjects()) {
-                topics.addAll(subjectsRepository.findByName(subject).getTopics());
-            }
-            entity.setTopics(topics);
-        }
         if(packages.getVisibility() && packages.getActive()){
             entity.setPackageStatus(ACTIVE);
         }
@@ -97,9 +91,10 @@ public class PackagesConversion {
         entity.setDescription(packages.getDescription());
         entity.setCourseEndDate(packages.getCourseEndDate());
         entity.setTeacherName(packages.getTeacherName());
-        entity.setAddOtherMembers(packages.getAddOtherMembers());
+        entity.setAnyoneCanAddBatch(packages.getAnyoneCanAddBatch());
+        entity.setRefundable(packages.getRefundable());
         entity.setCostPerHour(packages.getCostPerHour());
-        entity.setMonthlyDiscount(packages.getMonthlyDiscount());
+        entity.setCourseDiscount(packages.getCourseDiscount());
         entity.setWeeklyCost(packages.getWeeklyCost());
         entity.setTotalWeekHours(packages.getTotalWeekHours());
         entity.setTotalMonthHours(packages.getTotalMonthHours());

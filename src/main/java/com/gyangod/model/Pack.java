@@ -25,11 +25,13 @@ public class Pack {
 
     private String teacherName;
 
-    private Boolean addOtherMembers;
+    private Boolean anyoneCanAddBatch;
+
+    private Boolean refundable;
 
     private Double costPerHour;
 
-    private Double monthlyDiscount;
+    private Double courseDiscount;
 
     private Double weeklyCost;
 
@@ -48,9 +50,6 @@ public class Pack {
     private Map<String,List<PackageOccurrences>> mapOccurrences;
 
     private List<String> subjects;
-
-    //is it necessary?
-    private List<String> topics;
 
     private Boolean visibility;
 
@@ -120,12 +119,20 @@ public class Pack {
         this.teacherName = teacherName;
     }
 
-    public Boolean getAddOtherMembers() {
-        return addOtherMembers;
+    public Boolean getAnyoneCanAddBatch() {
+        return anyoneCanAddBatch;
     }
 
-    public void setAddOtherMembers(Boolean addOtherMembers) {
-        this.addOtherMembers = addOtherMembers;
+    public void setAnyoneCanAddBatch(Boolean anyoneCanAddBatch) {
+        this.anyoneCanAddBatch = anyoneCanAddBatch;
+    }
+
+    public Boolean getRefundable() {
+        return refundable;
+    }
+
+    public void setRefundable(Boolean refundable) {
+        this.refundable = refundable;
     }
 
     public Double getCostPerHour() {
@@ -136,12 +143,12 @@ public class Pack {
         this.costPerHour = costPerHour;
     }
 
-    public Double getMonthlyDiscount() {
-        return monthlyDiscount;
+    public Double getCourseDiscount() {
+        return courseDiscount;
     }
 
-    public void setMonthlyDiscount(Double monthlyDiscount) {
-        this.monthlyDiscount = monthlyDiscount;
+    public void setCourseDiscount(Double courseDiscount) {
+        this.courseDiscount = courseDiscount;
     }
 
     public Double getWeeklyCost() {
@@ -214,14 +221,6 @@ public class Pack {
 
     public void setSubjects(List<String> subjects) {
         this.subjects = subjects;
-    }
-
-    public List<String> getTopics() {
-        return topics;
-    }
-
-    public void setTopics(List<String> topics) {
-        this.topics = topics;
     }
 
     public Boolean getVisibility() {

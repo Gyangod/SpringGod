@@ -38,12 +38,15 @@ public class PackagesEntity {
     private String teacherName;
 
     @NotNull
-    private Boolean addOtherMembers = true;
+    private Boolean anyoneCanAddBatch = true;
+
+    @NotNull
+    private Boolean refundable = true;
 
     @NotNull //imp
     private Double costPerHour = 0.0;
 
-    private Double monthlyDiscount;
+    private Double courseDiscount;
 
     @NotNull
     private Double weeklyCost = 0.0;
@@ -69,9 +72,6 @@ public class PackagesEntity {
 
     @Indexed(sparse = true)
     private List<String> subjects;
-
-    @Indexed(sparse = true)
-    private List<String> topics;
 
     @Indexed(sparse = true)
     private String packageStatus;
@@ -140,12 +140,20 @@ public class PackagesEntity {
         this.teacherName = teacherName;
     }
 
-    public Boolean getAddOtherMembers() {
-        return addOtherMembers;
+    public Boolean getAnyoneCanAddBatch() {
+        return anyoneCanAddBatch;
     }
 
-    public void setAddOtherMembers(Boolean addOtherMembers) {
-        this.addOtherMembers = addOtherMembers;
+    public void setAnyoneCanAddBatch(Boolean anyoneCanAddBatch) {
+        this.anyoneCanAddBatch = anyoneCanAddBatch;
+    }
+
+    public Boolean getRefundable() {
+        return refundable;
+    }
+
+    public void setRefundable(Boolean refundable) {
+        this.refundable = refundable;
     }
 
     public Double getCostPerHour() {
@@ -156,12 +164,12 @@ public class PackagesEntity {
         this.costPerHour = costPerHour;
     }
 
-    public Double getMonthlyDiscount() {
-        return monthlyDiscount;
+    public Double getCourseDiscount() {
+        return courseDiscount;
     }
 
-    public void setMonthlyDiscount(Double monthlyDiscount) {
-        this.monthlyDiscount = monthlyDiscount;
+    public void setCourseDiscount(Double courseDiscount) {
+        this.courseDiscount = courseDiscount;
     }
 
     public Double getWeeklyCost() {
@@ -234,14 +242,6 @@ public class PackagesEntity {
 
     public void setSubjects(List<String> subjects) {
         this.subjects = subjects;
-    }
-
-    public List<String> getTopics() {
-        return topics;
-    }
-
-    public void setTopics(List<String> topics) {
-        this.topics = topics;
     }
 
     public PackageState getPackageStatus() {
