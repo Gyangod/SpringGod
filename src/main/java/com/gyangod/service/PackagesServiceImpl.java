@@ -5,10 +5,12 @@ import com.gyangod.entity.CustomerEntity;
 import com.gyangod.entity.PackagesEntity;
 import com.gyangod.enums.statemachine.PackageState;
 import com.gyangod.exception.domain.BlankFieldException;
+import com.gyangod.model.HttpResponse;
 import com.gyangod.model.Pack;
 import com.gyangod.model.PackageSearch;
 import com.gyangod.repository.CustomerRepository;
 import com.gyangod.repository.PackagesRepository;
+import com.gyangod.utils.JWTTokenProvider;
 import com.gyangod.utils.PackagesConversion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Distance;
@@ -22,10 +24,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static com.gyangod.enums.UserRole.ROLE_STUDENT;
 import static com.gyangod.enums.statemachine.PackageState.*;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 public class PackagesServiceImpl implements PackagesService {
@@ -39,25 +41,23 @@ public class PackagesServiceImpl implements PackagesService {
     @Autowired
     private PackagesConversion packagesConversion;
 
+    @Autowired
+    private JWTTokenProvider jwtTokenProvider;
+
     @Override
-    public Pack savePackage(Pack pack,String userName) throws Exception {
-        try{
-            CustomerEntity customerEntity = customerRepository.findByUserName(userName);
+    public HttpResponse savePackage(Pack pack, String token) throws Exception {
+            CustomerEntity customerEntity = customerRepository.findByUserName(jwtTokenProvider.returnUserName(token));
             PackagesEntity packagesEntity = packagesConversion.getPackagesEntity(pack);
             packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
             fillUpPackageAmountDetails(packagesEntity);
             packagesEntity.setPackageStatus(getPackageStatusFromRole(customerEntity.getRole()));
             PackagesEntity newPackagesEntity = packagesRepository.save(packagesEntity);
-            return packagesConversion.getPackages(newPackagesEntity,customerRepository);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw e;
-        }
+            return new HttpResponse(OK,"Successfully Created","New Package has been created. A Teacher will take up the package");
     }
 
     @Override
-    public Pack teachPackage(Pack pack, String userName) throws Exception {
-        CustomerEntity customerEntity = customerRepository.findByUserName(userName);
+    public HttpResponse teachPackage(Pack pack, String token) throws Exception {
+        CustomerEntity customerEntity = customerRepository.findByUserName(jwtTokenProvider.returnUserName(token));
         PackagesEntity packagesEntity = packagesConversion.getPackagesEntity(pack);
         packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
         packagesEntity.setTeacherName(customerEntity.getFirstName()+" "+customerEntity.getLastName());
@@ -65,7 +65,7 @@ public class PackagesServiceImpl implements PackagesService {
         fillUpPackageAmountDetails(packagesEntity);
         packagesEntity.setPackageStatus(ACTIVE);
         PackagesEntity newPackagesEntity = packagesRepository.save(packagesEntity);
-        return packagesConversion.getPackages(newPackagesEntity,customerRepository);
+        return new HttpResponse(OK,"Successfully Created","New Package has been created. Invite students to take up the package");
     }
 
     @Override
@@ -125,20 +125,21 @@ public class PackagesServiceImpl implements PackagesService {
                 }
             }
         }
-        if(packagesEntity.getTotalWeekHours() <= 0.0 && packagesEntity.getTotalMonthHours() <= 0.0){
+        if((packagesEntity.getTotalWeekHours() == null || packagesEntity.getTotalWeekHours() <= 0.0) &&
+                (packagesEntity.getTotalMonthHours() == null || packagesEntity.getTotalMonthHours() <= 0.0)){
             throw new BlankFieldException("Time");
-        } else if(packagesEntity.getTotalWeekHours() > 0.0){
+        } else if(packagesEntity.getTotalWeekHours() != null && packagesEntity.getTotalWeekHours() > 0.0){
             packagesEntity.setTotalMonthHours(packagesEntity.getTotalWeekHours() * 4);
         } else {
             packagesEntity.setTotalWeekHours(packagesEntity.getTotalMonthHours() / 4);
         }
-        if(packagesEntity.getCostPerHour() > 0.0) {
+        if(packagesEntity.getCostPerHour() != null && packagesEntity.getCostPerHour() > 0.0) {
             packagesEntity.setWeeklyCost(packagesEntity.getCostPerHour() * packagesEntity.getTotalWeekHours());
             packagesEntity.setMonthlyCost(packagesEntity.getCostPerHour() * packagesEntity.getTotalMonthHours());
-        } else if (packagesEntity.getWeeklyCost() > 0.0) {
+        } else if (packagesEntity.getWeeklyCost() != null && packagesEntity.getWeeklyCost() > 0.0) {
             packagesEntity.setCostPerHour(packagesEntity.getWeeklyCost() / packagesEntity.getTotalWeekHours());
             packagesEntity.setMonthlyCost(packagesEntity.getWeeklyCost() * 4);
-        } else if(packagesEntity.getMonthlyCost() > 0.0) {
+        } else if(packagesEntity.getMonthlyCost() != null && packagesEntity.getMonthlyCost() > 0.0) {
             packagesEntity.setWeeklyCost(packagesEntity.getMonthlyCost() / 4);
             packagesEntity.setCostPerHour(packagesEntity.getMonthlyCost() / packagesEntity.getTotalMonthHours());
         } else {
