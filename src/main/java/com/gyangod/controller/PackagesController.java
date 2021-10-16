@@ -2,6 +2,7 @@ package com.gyangod.controller;
 
 import com.gyangod.entity.StandardsEntity;
 import com.gyangod.exception.controller.PackageExceptionHandling;
+import com.gyangod.model.HttpResponse;
 import com.gyangod.model.Pack;
 import com.gyangod.service.ConstantsService;
 import com.gyangod.service.PackagesService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.gyangod.constants.SecurityConstant.AUTHORIZATION_HEADER;
 import static org.springframework.http.HttpStatus.OK;
 
 @Controller
@@ -25,15 +27,15 @@ public class PackagesController extends PackageExceptionHandling {
     @Autowired
     private ConstantsService constantsService;
 
-    @PostMapping(value = "teach/{userName}")
+    @PostMapping(value = "teach")
     @PreAuthorize("hasAnyAuthority('pack:create')")
-    public ResponseEntity<Pack> savePackageFromTeacher(@PathVariable(value = "userName") String userName, @RequestBody Pack pack) throws Exception{
-        return new ResponseEntity<>(packagesService.teachPackage(pack,userName),OK);
+    public ResponseEntity<HttpResponse> savePackageFromTeacher(@RequestHeader(AUTHORIZATION_HEADER) String jwtToken, @RequestBody Pack pack) throws Exception{
+        return new ResponseEntity<>(packagesService.teachPackage(pack,jwtToken.split(" ")[1]),OK);
     }
 
-    @PostMapping(value = "save/{userName}")
-    public ResponseEntity<Pack> savePackageFromUser(@PathVariable(value = "userName") String userName, @RequestBody Pack pack) throws Exception{
-        return new ResponseEntity<>(packagesService.savePackage(pack,userName), OK);
+    @PostMapping(value = "save")
+    public ResponseEntity<HttpResponse> savePackageFromUser(@RequestHeader(AUTHORIZATION_HEADER) String jwtToken, @RequestBody Pack pack) throws Exception{
+        return new ResponseEntity<>(packagesService.savePackage(pack,jwtToken.split(" ")[1]), OK);
     }
 
     @GetMapping(value = "get/subjects")

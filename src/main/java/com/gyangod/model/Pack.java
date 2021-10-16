@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Pack {
 
-    private String packageId;
+    private String id;
 
     private List<String> standards;
 
@@ -53,14 +53,14 @@ public class Pack {
 
     private Boolean visibility;
 
-    private Boolean isActive;
+    private Boolean active;
 
     public String getPackageId() {
-        return packageId;
+        return id;
     }
 
-    public void setPackageId(String packageId) {
-        this.packageId = packageId;
+    public void setPackageId(String id) {
+        this.id = id;
     }
 
     public List<String> getStandards() {
@@ -232,10 +232,10 @@ public class Pack {
     }
 
     public Boolean getActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(Boolean active) {
-        isActive = active;
+        this.active = active;
     }
 }

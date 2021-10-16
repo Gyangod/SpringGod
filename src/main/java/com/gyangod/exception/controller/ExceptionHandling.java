@@ -45,7 +45,7 @@ public class ExceptionHandling implements ErrorController {
     }
 
     @ExceptionHandler(JWTVerificationException.class)
-    public ResponseEntity<HttpResponse> regexMatchException(JWTVerificationException e) {
+    public ResponseEntity<HttpResponse> jwtVerificationException(JWTVerificationException e) {
         return createHttpResponse(FORBIDDEN,e.getMessage());
     }
 
