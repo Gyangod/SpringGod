@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.gyangod.enums.UserRole.ROLE_STUDENT;
@@ -48,7 +49,7 @@ public class PackagesServiceImpl implements PackagesService {
     public HttpResponse savePackage(Pack pack, String token) throws Exception {
             CustomerEntity customerEntity = customerRepository.findByUserName(jwtTokenProvider.returnUserName(token));
             PackagesEntity packagesEntity = packagesConversion.getPackagesEntity(pack);
-            packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
+            packagesEntity.setCreatedByUserId(customerEntity.getUserName());
             fillUpPackageAmountDetails(packagesEntity);
             packagesEntity.setPackageStatus(getPackageStatusFromRole(customerEntity.getRole()));
             PackagesEntity newPackagesEntity = packagesRepository.save(packagesEntity);
@@ -59,13 +60,24 @@ public class PackagesServiceImpl implements PackagesService {
     public HttpResponse teachPackage(Pack pack, String token) throws Exception {
         CustomerEntity customerEntity = customerRepository.findByUserName(jwtTokenProvider.returnUserName(token));
         PackagesEntity packagesEntity = packagesConversion.getPackagesEntity(pack);
-        packagesEntity.setCreatedByUserId(customerEntity.getCustomerId());
+        packagesEntity.setCreatedByUserId(customerEntity.getUserName());
         packagesEntity.setTeacherName(customerEntity.getFirstName()+" "+customerEntity.getLastName());
-        packagesEntity.setTeacherId(customerEntity.getCustomerId());
+        packagesEntity.setTeacherId(customerEntity.getUserName());
         fillUpPackageAmountDetails(packagesEntity);
         packagesEntity.setPackageStatus(ACTIVE);
         PackagesEntity newPackagesEntity = packagesRepository.save(packagesEntity);
         return new HttpResponse(OK,"Successfully Created","New Package has been created. Invite students to take up the package");
+    }
+
+    @Override
+    public List<Pack> getAllPackagesByUser(String token) throws Exception {
+
+        List<PackagesEntity> packagesEntities = packagesRepository.findAllByCreatedByUserId(jwtTokenProvider.returnUserName(token));
+        List<Pack> packs = new LinkedList<>();
+        for (PackagesEntity packagesEntity : packagesEntities) {
+            packs.add(packagesConversion.getPackWithoutEntity(packagesEntity));
+        }
+        return (packs.size() == 0) ? null : packs;
     }
 
     @Override
@@ -108,7 +120,7 @@ public class PackagesServiceImpl implements PackagesService {
         if(packagesEntity.getFixedCourse() && (packagesEntity.getMapOccurrences() == null || packagesEntity.getMapOccurrences().size() == 0)){
             throw new BlankFieldException("Batch");
         }
-        if(packagesEntity.getMapOccurrences() != null && packagesEntity.getMapOccurrences().size() > 0) {
+        /*if(packagesEntity.getMapOccurrences() != null && packagesEntity.getMapOccurrences().size() > 0) {
             for (List<PackageOccurrences> packages: packagesEntity.getMapOccurrences().values()) {
                 if(packages!=null && packages.size() > 0) {
                     double weekDiff = 0.0;
@@ -124,7 +136,7 @@ public class PackagesServiceImpl implements PackagesService {
                     packagesEntity.setTotalWeekHours(weekDiff);
                 }
             }
-        }
+        }*/
         if((packagesEntity.getTotalWeekHours() == null || packagesEntity.getTotalWeekHours() <= 0.0) &&
                 (packagesEntity.getTotalMonthHours() == null || packagesEntity.getTotalMonthHours() <= 0.0)){
             throw new BlankFieldException("Time");

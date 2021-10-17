@@ -47,7 +47,7 @@ public class PackagesController extends PackageExceptionHandling {
     public ResponseEntity<List<StandardsEntity>> getAllStandards() throws Exception {
         return new ResponseEntity<>(constantsService.STANDARDS_ENTITY_LIST(), OK);
     }
-
+    //TODO: FIX SUBJECTS
     @GetMapping(value = "get/all/subjects")
     public ResponseEntity<List<String>> getAllSubjectAndTopics() throws Exception {
         return new ResponseEntity<>(constantsService.SUBJECTS_TOPIC_LIST(), OK);
@@ -56,6 +56,11 @@ public class PackagesController extends PackageExceptionHandling {
     @GetMapping(value = "get/all")
     public ResponseEntity<List<Pack>> getAllPackages() throws Exception {
         return new ResponseEntity<>(packagesService.getAllPackages(), OK);
+    }
+
+    @GetMapping(value = "get/all/by/user")
+    public ResponseEntity<List<Pack>> getAllPackagesByUser(@RequestHeader(AUTHORIZATION_HEADER) String jwtToken) throws Exception {
+        return new ResponseEntity<>(packagesService.getAllPackagesByUser(jwtToken.split(" ")[1]), OK);
     }
 
     /*@PostMapping(value = "search")

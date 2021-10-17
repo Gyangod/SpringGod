@@ -13,4 +13,6 @@ public interface PackagesRepository extends MongoRepository<PackagesEntity,Strin
 
     List<PackagesEntity> findAllByLocationNear(Point location, Distance distance);
 
+    List<PackagesEntity> findAllByCreatedByUserId(String username);
+
 }
